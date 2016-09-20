@@ -4,7 +4,8 @@
     "description": "Texas Hold'em implementation for Altspace.",
     "main": "index.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "lint": "eslint src/js spec",
+        "test": "jasmine"
     },
     "repository": {
         "type": "git",
@@ -17,9 +18,7 @@
     },
     "homepage": "https://github.com/AltspaceVR/altspace-poker#readme",
     "devDependencies": {
-        "eslint": "^3.5.0"
-    },
-    "scripts": {
-        "lint" : "./node_modules/.bin/eslint src/js"
+        "eslint": "^3.5.0",
+        "jasmine": "^2.5.2"
     }
 }
