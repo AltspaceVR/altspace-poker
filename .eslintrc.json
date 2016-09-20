@@ -18,6 +18,8 @@
         "Deck": true,
         "Game": true,
         "Ruleset": true,
-        "Player": true
+        "Player": true,
+        "SoundEngine": true,
+        "BufferLoader": true
     }
 }
