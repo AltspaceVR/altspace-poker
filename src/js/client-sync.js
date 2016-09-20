@@ -608,63 +608,6 @@ function onUpdateRecieved(newVal) {
     });
 }
 
-
-function isCyclic (obj) {
-    var seenObjects = [];
-
-    function detect (obj) {
-        if (obj && typeof obj === 'object') {
-            if (seenObjects.indexOf(obj) !== -1) {
-                return true;
-            }
-            seenObjects.push(obj);
-            for (var key in obj) {
-                if (obj.hasOwnProperty(key) && detect(obj[key])) {
-                    console.log(obj, 'cycle at ' + key);
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    return detect(obj);
-}
-
-/**
- * Simple is object check.
- * @param item
- * @returns {boolean}
- */
-function isObject(item) {
-    return (item && typeof item === 'object' && item !== null);
-}
-
-/**
- * Deep merge two objects.
- * @param target
- * @param source
- */
-function mergeDeep(target, source) {
-    if (isObject(target) && isObject(source)) {
-        Object.keys(source).forEach(function(key){
-            if (isObject(source[key])) {
-                if (!target[key]){
-                    var newObj = {};
-                    newObj[key] = {};
-                    Object.assign(target, newObj);
-                }
-                mergeDeep(target[key], source[key]);
-            } else {
-                var newObj = {};
-                newObj[key] = source[key];
-                Object.assign(target, newObj);
-            }
-        });
-    }
-    return target;
-}
-
 function sendUpdate(extraData, title, options) {
     title = title || "";
     options = options || {};
