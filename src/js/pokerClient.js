@@ -1,4 +1,4 @@
-(function(){var a = window.altspace; (function insert(ss, t){for(var i in ss) {for (var j in ss[i]) {t[j] = ss[i][j];}};})([a, a.utilities,a.utilities.behaviors, a.utilities.shims], window.alt = {})})();
+(function(){var a = window.altspace; (function insert(ss, t){for(var i in ss) {for (var j in ss[i]) {t[j] = ss[i][j];}};})([a, a.utilities,a.utilities.behaviors, a.utilities.shims], window.alt = {});})();
 
 // Setup
 
@@ -31,7 +31,7 @@ altspace.utilities.sync.connect({
 
 var startingMoney = 1337;
 
-var tableOffset = new THREE.Vector3(0, -150, 0)
+var tableOffset = new THREE.Vector3(0, -150, 0);
 
 var potPosition = new THREE.Vector3();
 //potPosition.copy(tableOffset);

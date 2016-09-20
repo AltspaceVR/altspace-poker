@@ -655,10 +655,10 @@ function advanceUI(chip) {
     card.position.z -= 10;
     card.rotation.x -= Math.PI/6;
 
-    card.addBehaviors({awake: function(obj){
-        obj.addEventListener('cursordown', function(){
+    card.addBehaviors({awake: function(obj) {
+        obj.addEventListener('cursordown', function() {
             toggleVisible(card, false);
-	    sendUpdate({authority:theGame.currentAuthority}, "requestFinishBetting", {thenUpdate: true});
+            sendUpdate({authority:theGame.currentAuthority}, "requestFinishBetting", {thenUpdate: true});
         });
     }});
     card.updateBehaviors(0);
@@ -673,7 +673,7 @@ function bettingUIInteractions(pl, updateBet, buttonArray) {
 
     this.allowedTo = function allowedToDoThis() {
         var allowed = this.player.userId === globalUserId;
-        if(!allowed){
+        if (!allowed) {
             var handObj = pl.hand;
             var uiObj = pl.bettingui.mainMesh;
             var pos = new THREE.Vector3();
@@ -697,54 +697,54 @@ function bettingUIInteractions(pl, updateBet, buttonArray) {
     this.awake = function awake(obj){
         this.object = obj;
         this.addArr[0].addEventListener('cursordown', (function(that){
-            return function(t){
+            return function(){
                 that.addMoney(1);
             };
         })(this));
         this.addArr[1].addEventListener('cursordown', (function(that){
-            return function(t){
+            return function(){
                 that.addMoney(5);
             };
         })(this));
         this.addArr[2].addEventListener('cursordown', (function(that){
-            return function(t){
+            return function(){
                 that.addMoney(10);
 
             };
         })(this));
         this.addArr[3].addEventListener('cursordown', (function(that){
-            return function(t){
+            return function(){
                 that.addMoney(25);
             };
         })(this));
         this.addArr[4].addEventListener('cursordown', (function(that){
-            return function(t){
+            return function(){
                 that.addMoney(100);
             };
         })(this));
 
         this.subArr[0].addEventListener('cursordown', (function(that){
-            return function(t){
+            return function(){
                 that.addMoney(-1);
             };
         })(this));
         this.subArr[1].addEventListener('cursordown', (function(that){
-            return function(t){
+            return function(){
                 that.addMoney(-5);
             };
         })(this));
         this.subArr[2].addEventListener('cursordown', (function(that){
-            return function(t){
+            return function(){
                 that.addMoney(-10);
             };
         })(this));
         this.subArr[3].addEventListener('cursordown', (function(that){
-            return function(t){
+            return function(){
                 that.addMoney(-25);
             };
         })(this));
         this.subArr[4].addEventListener('cursordown', (function(that){
-            return function(t){
+            return function(){
                 that.addMoney(-100);
             };
         })(this));
@@ -752,27 +752,27 @@ function bettingUIInteractions(pl, updateBet, buttonArray) {
         //fold, bet, all-in
 
         this.ctrlArray[0].addEventListener('cursordown', (function(that){
-            return function(t){
+            return function(){
                 that.fold();
             };
         })(this));
         this.ctrlArray[1].addEventListener('cursordown', (function(that){  //the check button
-            return function(t){
+            return function(){
                 that.done();
             };
         })(this));
         this.ctrlArray[2].addEventListener('cursordown', (function(that){ //the raise button
-            return function(t){
+            return function(){
                 that.done();
             };
         })(this));
         this.ctrlArray[3].addEventListener('cursordown', (function(that){ //the call button
-            return function(t){
+            return function(){
                 that.done();
             };
         })(this));
         this.ctrlArray[4].addEventListener('cursordown', (function(that){
-            return function(t){
+            return function(){
                 that.allIn();
             };
         })(this));
@@ -780,7 +780,7 @@ function bettingUIInteractions(pl, updateBet, buttonArray) {
 
     this.addMoney = function addMoney(amount) {
         console.log('got a click event');
-        if(!this.allowedTo()){return false};
+        if(!this.allowedTo()){return false;}
 
         if (this.player.currentBet + amount >= this.player.money) {   //do we have the funds
             return;
@@ -837,88 +837,73 @@ function bettingUIInteractions(pl, updateBet, buttonArray) {
     };
 
     this.allIn = function allIn() {
-        if(!this.allowedTo()){return false;};
+        if(!this.allowedTo()){return false;}
         this.player.currentBet = this.player.money;
         this.updateBet(this.player.currentBet);
         this.player.raised = true;
     };
 
     this.done = function done() {
-        if(!this.allowedTo()){return false;};
+        if(!this.allowedTo()){return false;}
         this.player.betUpdate(this.player.currentBet);
         this.updateBet(this.player.currentBet);
     };
 
     this.fold = function fold() {
-        if(!this.allowedTo()){return false;};
+        if(!this.allowedTo()){return false;}
         this.player.foldUpdate();
         this.updateBet(this.player.currentBet);
     };
 }
 
-
-
-
-function addPlayer(ind){
+function addPlayer(ind) {
     var index = ind;
     var object;
     var textObj;
-
-
-    function awake(obj){
+    function awake(obj) {
         object = obj;
-        object.addEventListener('cursordown', (function(i){
-            return function(){
-
-
-		if(typeof globalUserId != 'undefined'){
-		    theGame.players[i].state = 0;
-		    theGame.players[i].userId = globalUserId;
+        object.addEventListener('cursordown', (function(i) {
+            return function() {
+                if (typeof globalUserId != 'undefined') {
+                    theGame.players[i].state = 0;
+                    theGame.players[i].userId = globalUserId;
                     theGame.players[i].name = globalUserName;
                     globalPlayerIndex = i;
-		    sendUpdate({registerIndex: i, userId: globalUserId, name:globalUserName, money: theGame.players[i].money}, "registerPlayer");
-		}else{
-
-		    altspace.getUser().then(function(result){
-		        globalUserId = result.userId;
+                    sendUpdate({registerIndex: i, userId: globalUserId, name:globalUserName, money: theGame.players[i].money}, "registerPlayer");
+                } else {
+                    altspace.getUser().then(function(result) {
+                        globalUserId = result.userId;
                         globalUserName = result.displayName;
-			theGame.players[i].state = 0;
-			theGame.players[i].userId = globalUserId;
+                        theGame.players[i].state = 0;
+                        theGame.players[i].userId = globalUserId;
                         theGame.players[i].name = globalUserName;
                         globalPlayerIndex = i;
-			sendUpdate({registerIndex: i, userId: globalUserId, name:globalUserName, money:theGame.players[i].money}, "registerPlayer");
-		    });
-		}
-	    }
+                        sendUpdate({registerIndex: i, userId: globalUserId, name:globalUserName, money:theGame.players[i].money}, "registerPlayer");
+                    });
+                }
+            };
         }(index)));
-
     }
 
     return {awake: awake};
-
-
 }
 
-function startGame(player){
+function startGame(player) {
 
     var object;
     var pl = player;
-    function awake(obj){
+    function awake(obj) {
         object = obj;
         object.addEventListener('cursordown', startGame);
-
     }
 
     function allowedToDoThis(){
         var allowed = (pl.userId === globalUserId);
-        if(!allowed){
+        if (!allowed) {
             var pos = new THREE.Vector3();
             pos.copy(object.localToWorld(new THREE.Vector3(0, 50, 0)));
 
             var quat = object.getWorldQuaternion();
-
-
-
             var message = "Unauthorized!";
             var unauthorized = new errorMessage({
                 timeToDisappear: 3000,
@@ -928,7 +913,7 @@ function startGame(player){
                 rot: quat,
                 scale: 0.4
             });
-        }else if(numActivePlayers() < 2){
+        } else if (numActivePlayers() < 2) {
             var pos = new THREE.Vector3();
             pos.copy(object.localToWorld(new THREE.Vector3(0, 20, 0)));
 
@@ -952,14 +937,12 @@ function startGame(player){
         //return true;
     }
 
-    function startGame(){
-
-
-        if(allowedToDoThis()){
+    function startGame() {
+        if (allowedToDoThis()) {
             theGame.resetDealers();
             theGame.dealer = theGame.dealingOrder.indexOf(pl);
             theGame.rotateDealers();
-            for(var i=0; i<theGame.players.length; i++){
+            for (var i = 0; i < theGame.players.length; i++) {
                 toggleVisible(theGame.players[i].dealerChip.mesh, false);
             }
 

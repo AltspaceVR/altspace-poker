@@ -26,16 +26,16 @@ card.prototype.friendlynumber = function() {
 card.prototype.texturePrefix = "assets/Cards/";
 
 card.prototype.filename = function() {
-    return this.texturePrefix+numArray[this.number]+"_of_"+this.suit+".png";
+    return this.texturePrefix + numArray[this.number] + "_of_" + this.suit + ".png";
 };
 
 function deck() {
-    this.perfectDeck = [];		//deck of cards in perfect order;
+    this.perfectDeck = [];              //deck of cards in perfect order;
     this.shuffledDeck = [];
-    for(var i=0; i<numArray.length; i++){
-	for(var j=0; j<suitArray.length; j++){
-	    this.perfectDeck.push(new card(i, suitArray[j]));
-	}
+    for (var i = 0; i < numArray.length; i++) {
+        for (var j = 0; j < suitArray.length; j++) {
+            this.perfectDeck.push(new card(i, suitArray[j]));
+        }
     }
     //this.makeGenericCard();
 }
@@ -81,12 +81,12 @@ function deck() {
 
 deck.prototype.shuffle = function() {
     this.shuffledDeck = this.perfectDeck.slice(0);
-    var tempCard;		//Fisher-Yates algorithm for randomness
+    var tempCard;               //Fisher-Yates algorithm for randomness
     for(var i=this.shuffledDeck.length - 1; i > 0; i--){
-	var j = Math.floor(Math.random() * (i+1));
-	tempCard = this.shuffledDeck[i];
-	this.shuffledDeck[i] = this.shuffledDeck[j];
-	this.shuffledDeck[j] = tempCard;
+        var j = Math.floor(Math.random() * (i+1));
+        tempCard = this.shuffledDeck[i];
+        this.shuffledDeck[i] = this.shuffledDeck[j];
+        this.shuffledDeck[j] = tempCard;
     }
 };
 
@@ -103,13 +103,13 @@ deck.prototype.arrange = function(arrangement) {
 
 deck.prototype.dealTo = function(players, numCards) {
     if (typeof(players.length) == "undefined") {
-	players = [players];
+        players = [players];
     }
     for (var i = 0; i < numCards; i++) {
-	var thiscard = this.shuffledDeck.pop();
-	for (var j = 0; j < players.length; j++) {
-	    players[j].cards.push(thiscard);
-	}
+        var thiscard = this.shuffledDeck.pop();
+        for (var j = 0; j < players.length; j++) {
+            players[j].cards.push(thiscard);
+        }
     }
 };
 
@@ -223,22 +223,22 @@ function ruleset() {
 
 ruleset.prototype.judge = function(cards) {
     var hand = {
-	name: "",
-	value: -1
+        name: "",
+        value: -1
     };
     for (var i = 0; i < this.handRanking.length; i++) {
 
         //should sort cards here
 
         var thesecards = this.handRanking[i].isHand(cards);
-	if (thesecards != false) {
-	    hand.name = this.handRanking[i].name;
+        if (thesecards != false) {
+            hand.name = this.handRanking[i].name;
             hand.cards = thesecards.cards;
-	    hand.value = this.handRanking.length - i;
+            hand.value = this.handRanking.length - i;
             hand.subValue = thesecards.subVal;  //when comparing hands to see who has the higher pair (for instance), use this value, if value is the same the players tie
             console.log(hand);
-	    break;
-	}
+            break;
+        }
     }
     return hand;
 };
@@ -281,11 +281,11 @@ function sortCards(cardset) {
 var mainRules = new ruleset();
 mainRules.handRanking = [
     {
-	name: "Straight Flush",
-	isHand: function(cards) {
+        name: "Straight Flush",
+        isHand: function(cards) {
             var straightCards = isStraight(cards);
             var flushCards = isFlush(cards);
-	    if (straightCards !== false && flushCards !== false && sameCards(straightCards, flushCards)) {
+            if (straightCards !== false && flushCards !== false && sameCards(straightCards, flushCards)) {
                 return {
                     cards: straightCards,
                     subVal:  [maxCardVal(straightCards)]
@@ -293,12 +293,12 @@ mainRules.handRanking = [
             } else {
                 return false;
             }
-	}
+        }
     },
     {
-	name: "Four of a kind",
-	isHand: function(cards) {
-	    var multiples = hasMultiples(cards, 4);
+        name: "Four of a kind",
+        isHand: function(cards) {
+            var multiples = hasMultiples(cards, 4);
             if (multiples === false) {
                 return false;
             }
@@ -312,12 +312,12 @@ mainRules.handRanking = [
                 cards: multiples.concat(sortedCards[0]),
                 subVal: [multiples[0].number, sortedCards[0].number]
             };
-	}
+        }
     },
     {
-	name: "Full House",
-	isHand: function(cards) {
-	    var multiples = hasMultiples(cards, 3);
+        name: "Full House",
+        isHand: function(cards) {
+            var multiples = hasMultiples(cards, 3);
             if (multiples.length !== 3) {
                 return false;
             } else {
@@ -335,12 +335,12 @@ mainRules.handRanking = [
                     };
                 }
             }
-	}
+        }
     },
     {
-	name: "Flush",
-	isHand: function(cards) {
-	    var flushCards = isFlush(cards);
+        name: "Flush",
+        isHand: function(cards) {
+            var flushCards = isFlush(cards);
             if (flushCards === false) {
                 return false;
             }
@@ -348,12 +348,12 @@ mainRules.handRanking = [
                 cards: flushCards,
                 subVal: [maxCardVal(flushCards)]
             };
-	}
+        }
     },
     {
-	name: "Straight",
-	isHand: function(cards) {
-	    var straightCards = isStraight(cards);
+        name: "Straight",
+        isHand: function(cards) {
+            var straightCards = isStraight(cards);
             if (straightCards === false) {
                 return false;
             } else {
@@ -362,13 +362,13 @@ mainRules.handRanking = [
                     subVal: [maxCardVal(straightCards)]
                 };
             }
-	}
+        }
     },
     {
-	name: "Three of a kind",
-	isHand: function(cards) {
+        name: "Three of a kind",
+        isHand: function(cards) {
             var threeCards = hasMultiples(cards, 3);
-	    if (threeCards === false) {
+            if (threeCards === false) {
                 return false;
             }
 
@@ -381,12 +381,12 @@ mainRules.handRanking = [
                 cards: threeCards.concat(sortedCards.slice(0, 2)),
                 subVal: [threeCards[0].number].concat(sortedCards.slice(0, 2).map(function(obj){return obj.number}))
             };
-	}
+        }
     },
     {
-	name: "Two pair",
-	isHand: function(cards) {
-	    var multiples = hasMultiples(cards, 2);
+        name: "Two pair",
+        isHand: function(cards) {
+            var multiples = hasMultiples(cards, 2);
             if (multiples.length !== 2) {
                 return false;
             } else {
@@ -413,12 +413,12 @@ mainRules.handRanking = [
                     };
                 }
             }
-	}
+        }
     },
     {
-	name: "One pair",
-	isHand: function(cards) {
-	    var pairCards = hasMultiples(cards, 2);
+        name: "One pair",
+        isHand: function(cards) {
+            var pairCards = hasMultiples(cards, 2);
             if (pairCards === false) {
                 return false;
             }
@@ -432,17 +432,17 @@ mainRules.handRanking = [
                 cards: pairCards.concat(sorted.slice(0, 3)),
                 subVal: [pairCards[0].number].concat(sorted.slice(0, 3).map(function(obj){return obj.number;}))
             };
-	}
+        }
     },
     {
-	name: "High card",
-	isHand: function(cards) {
+        name: "High card",
+        isHand: function(cards) {
             cards = sortCards(cards);
             return {
                 cards: cards,
                 subVal: cards.map(function(obj){return obj.number;})
             };
-	}
+        }
     },
 ];
 
@@ -452,23 +452,23 @@ function hasMultiples(cards, numberOfMultiples) {
     }
     var sortedCards = [];
     for (var i = 0; i < cards.length; i++) {
-	if (typeof(sortedCards[cards[i].number]) == "undefined") {
-	    sortedCards[cards[i].number] = {
+        if (typeof(sortedCards[cards[i].number]) == "undefined") {
+            sortedCards[cards[i].number] = {
                 cards: [cards[i]],
                 num: 0
             };
-	} else {
+        } else {
             sortedCards[cards[i].number].cards.push(cards[i]);
         }
-	sortedCards[cards[i].number].num++;
+        sortedCards[cards[i].number].num++;
     }
 
     var findThem = false;
 
     sortedCards.forEach(function(obj) {
-	if (parseInt(obj.num) === parseInt(numberOfMultiples)) {
-	    findThem = obj.cards;
-	}
+        if (parseInt(obj.num) === parseInt(numberOfMultiples)) {
+            findThem = obj.cards;
+        }
     });
 
     return findThem;
@@ -503,11 +503,11 @@ function isFlush(cards) {
 function isStraight(cards) {
     var theseCards = cards.slice(0);
     theseCards.sort(function(card1, card2) {
-	if (card1.number === card2.number) {
-	    return 0;
-	} else {
-	    return card1.number > card2.number;
-	}
+        if (card1.number === card2.number) {
+            return 0;
+        } else {
+            return card1.number > card2.number;
+        }
     });
 
     var foundStraight = false;
@@ -844,7 +844,7 @@ var betStep = function(game) {
 function checkForDoneBetting() {
     _checkForDoneBetting();
     setTimeout(checkForDoneBetting, 1000);
-};
+}
 
 function _checkForDoneBetting() {
     if (theGame.better === theGame.bettingOrder.length) {        //should calculate 'active' players
@@ -896,7 +896,7 @@ var texasHoldEm = {
 
             }
         },
-	{   //1
+        {   //1
             execClient: function(game) {
                 if (typeof game.startGameButton !== 'undefined') {
                     game.startGameButton.visible = false;
@@ -904,8 +904,8 @@ var texasHoldEm = {
                 game.step = 2;
                 game.runClientStep();
             },
-	    exec: function(game) {
-		//deal 2 to players
+            exec: function(game) {
+                //deal 2 to players
                 for (var i = 0; i < game.players.length; i++) {
                     console.log("players look like this", game.players[i].state > -1, game.players[i].cards.length);
                     game.players[i].cards = [];
@@ -917,11 +917,11 @@ var texasHoldEm = {
                 }
                 sendUpdate({toStep: 1}, "changeGameStep", {thenUpdate: true});
             }
-	},
-	{ //2
-	    execClient: betStep
-	},
-	{ //3
+        },
+        { //2
+            execClient: betStep
+        },
+        { //3
             execClient: function(game) {
 
                 toggleVisible(game.betCube, false);
@@ -940,7 +940,7 @@ var texasHoldEm = {
                 game.step = 4;
                 game.runClientStep();
             },
-	    exec: function(game) {
+            exec: function(game) {
 
                 //make a show of discarding a card?
                 var dealTo = [];
@@ -949,11 +949,11 @@ var texasHoldEm = {
                 sendUpdate({sharedCards: getSafeCards(game.sharedCards)}, "dealSharedCards");
                 sendUpdate({toStep: 3}, "changeGameStep", {thenUpdate: true});
             }
-	},
-	{ //4
-	    execClient: betStep
-	},
-	{ //5
+        },
+        { //4
+            execClient: betStep
+        },
+        { //5
             execClient: function(game) {
                 toggleVisible(game.betCube, false);
                 game.sharedCards.cards[3] = game.deck.getCard(game.sharedCards.cards[3], true, true);
@@ -968,18 +968,18 @@ var texasHoldEm = {
                 game.step = 6;
                 game.runClientStep();
             },
-	    exec: function(game) {
+            exec: function(game) {
                 var dealTo = [];
                 dealTo.push(game.sharedCards);
                 game.deck.dealTo(dealTo, 1);
                 sendUpdate({sharedCards:getSafeCards({cards:[game.sharedCards.cards[3]]})}, "dealSharedCards");
                 sendUpdate({toStep: 5}, "changeGameStep", {thenUpdate: true});
-	    }
-	},
-	{ //6
-	    execClient: betStep
-	},
-	{ //7
+            }
+        },
+        { //6
+            execClient: betStep
+        },
+        { //7
             execClient: function(game) {
                 toggleVisible(game.betCube, false);
                 game.sharedCards.cards[4] = game.deck.getCard(game.sharedCards.cards[4], true, true);
@@ -996,21 +996,21 @@ var texasHoldEm = {
                 game.step = 8;
                 game.runClientStep();
             },
-	    exec: function(game) {
+            exec: function(game) {
                 var dealTo = [];
                 dealTo.push(game.sharedCards);
                 game.deck.dealTo(dealTo, 1);
                 sendUpdate({sharedCards:getSafeCards({cards:[game.sharedCards.cards[4]]})}, "dealSharedCards");
                 sendUpdate({toStep: 7}, "changeGameStep", {thenUpdate: true});
-	    }
-	},
-	{ //8
-	    execClient: betStep
-	},
-	{ //9
+            }
+        },
+        { //8
+            execClient: betStep
+        },
+        { //9
             execClient: function(game) {
             },
-	    exec: function(game) {
+            exec: function(game) {
 
                 var highestHand = [];
                 var winningPlayer;
@@ -1112,8 +1112,8 @@ var texasHoldEm = {
                 game.step = 10;
 
                 game.runStep(); //kick out players without money, transfer control
-	    }
-	},
+            }
+        },
         { //10
 
             execClient: function(game) {
