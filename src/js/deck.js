@@ -1,30 +1,16 @@
-function Deck() {
-    this.perfectDeck = [];              //deck of cards in perfect order;
-    this.shuffledDeck = [];
-    for (var i = 0; i < Card.numArray.length; i++) {
-        for (var j = 0; j < Card.suitArray.length; j++) {
-            this.perfectDeck.push(new Card(i, Card.suitArray[j]));
-        }
-    }
-    //this.makeGenericCard();
+function Deck(cards) {
+    this.cards = cards || Card.orderedDeck;
 }
 
 Deck.prototype.shuffle = function() {
-    this.shuffledDeck = this.perfectDeck.slice(0);
-    var tempCard;               //Fisher-Yates algorithm for randomness
-    for (var i = this.shuffledDeck.length - 1; i > 0; i--) {
-        var j = Math.floor(Math.random() * (i+1));
-        tempCard = this.shuffledDeck[i];
-        this.shuffledDeck[i] = this.shuffledDeck[j];
-        this.shuffledDeck[j] = tempCard;
-    }
+    this.cards = _.shuffle(Card.orderedDeck);
 };
 
 Deck.prototype.arrange = function(arrangement) {
     for (var i = 0; i < arrangement.length; i++) {
-        for (var j = 0; j < this.perfectDeck.length; j++) {
-            if (this.perfectDeck[j].number === arrangement[i].number && this.perfectDeck[j].suit === arrangement[i].suit) {
-                this.shuffledDeck[i] = this.perfectDeck[j];
+        for (var j = 0; j < Card.orderedDeck.length; j++) {
+            if (Card.orderedDeck[j].number === arrangement[i].number && Card.orderedDeck[j].suit === arrangement[i].suit) {
+                this.cards[i] = Card.orderedDeck[j];
                 break;
             }
         }
@@ -36,7 +22,7 @@ Deck.prototype.dealTo = function(players, numCards) {
         players = [players];
     }
     for (var i = 0; i < numCards; i++) {
-        var thiscard = this.shuffledDeck.pop();
+        var thiscard = this.cards.pop();
         for (var j = 0; j < players.length; j++) {
             players[j].cards.push(thiscard);
         }
@@ -63,9 +49,9 @@ Deck.prototype.getCard = function(theCard, large, visible) {
     if (theCard instanceof Card) {
         thisCard = theCard;
     } else {
-        for (var i = 0; i < this.perfectDeck.length; i++) {
-            if (this.perfectDeck[i].number === theCard.number && this.perfectDeck[i].suit === theCard.suit) {
-                thisCard = this.perfectDeck[i];
+        for (var i = 0; i < Card.orderedDeck.length; i++) {
+            if (Card.orderedDeck[i].number === theCard.number && Card.orderedDeck[i].suit === theCard.suit) {
+                thisCard = Card.orderedDeck[i];
                 break;
             }
         }

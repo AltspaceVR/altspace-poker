@@ -9,6 +9,7 @@
         "browser": true
     },
     "globals": {
+        "_": false,
         "altspace": false,
         "THREE": false,
         "TWEEN": false,

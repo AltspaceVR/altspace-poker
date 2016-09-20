@@ -125,7 +125,7 @@ var texasHoldEm = {
                 //game.dealer = 0;
                 game.deck.shuffle();
                 game.currentAuthority = globalUserId;
-                sendUpdate({authority:globalUserId, dealer: game.dealer, deck: getSafeCards({cards: game.deck.shuffledDeck}), blind: game.smallBlind, blindStartTime: game.timeBlindStarted}, "startHand");
+                sendUpdate({authority:globalUserId, dealer: game.dealer, deck: getSafeCards({cards: game.deck.cards}), blind: game.smallBlind, blindStartTime: game.timeBlindStarted}, "startHand");
                 game.resetSharedRotation();
 
                 for(var i=0; i<game.players.length; i++){

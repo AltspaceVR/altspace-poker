@@ -57,9 +57,9 @@ Game.prototype.resetCards = function() {
         toggleVisible(player.bettingui.mesh, false);
     }
 
-    for (var i = 0; i < this.deck.perfectDeck.length; i++) {
-        cardToDeck(this.deck.perfectDeck[i]);
-        delete this.deck.perfectDeck[i].geom;
+    for (var i = 0; i < Card.orderedDeck.length; i++) {
+        cardToDeck(Card.orderedDeck[i]);
+        delete Card.orderedDeck[i].geom;
     }
     this.sharedCards.cards = [];
 };
@@ -240,7 +240,7 @@ Game.prototype.nextHand = function() {
         });
     }
 
-    sendUpdate({authority:globalUserId, deck: getSafeCards({cards: this.deck.shuffledDeck}), dealer: this.dealer, blind: this.smallBlind, blindStartTime: this.timeBlindStarted},"startHand");
+    sendUpdate({authority:globalUserId, deck: getSafeCards({cards: this.deck.cards}), dealer: this.dealer, blind: this.smallBlind, blindStartTime: this.timeBlindStarted},"startHand");
     this.resetSharedRotation();
 
     //this.deck.shuffle();

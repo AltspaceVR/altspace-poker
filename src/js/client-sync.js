@@ -22,10 +22,9 @@ function getSafeGameObj(extradata){
     thisGame.startGameButton = null;
     thisGame.winCube = null;
     thisGame.dealingOrder = null;
-    //thisGame.deck.perfectDeck = null;
     thisGame.sharedCards = {cards:getSafeCards(theGame.sharedCards)};
     if (theGame.deck instanceof deck) {
-        thisGame.shuffledDeck = {cards:getSafeCards({cards: theGame.deck.shuffledDeck})};
+        thisGame.cards = {cards:getSafeCards({cards: theGame.deck.cards})};
     }
     thisGame.deck = null;
 
@@ -147,7 +146,7 @@ function processUpdates(newUpdates) {
                 for (var i = 0; i < data.player.cards.length; i++) {
                     theGame.players[data.index].cards[i] = data.player.cards[i];
                     //remove a card from the deck, so if the host refreshes their deck is still at the same state
-                    theGame.deck.shuffledDeck.pop();
+                    theGame.deck.cards.pop();
                 }
                 theGame.players[data.index].state = 1;
                 theGame.players[data.index].renderVisuals(0);
@@ -529,7 +528,7 @@ function processUpdates(newUpdates) {
             case "dealSharedCards":
                 Array.prototype.push.apply(theGame.sharedCards.cards, data.sharedCards);
                 for (var i = 0; i < data.sharedCards.length; i++) {
-                    theGame.deck.shuffledDeck.pop();
+                    theGame.deck.cards.pop();
                 }
                 break;
             case "transferControl":

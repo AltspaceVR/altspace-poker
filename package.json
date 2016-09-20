@@ -17,6 +17,9 @@
         "url": "https://github.com/AltspaceVR/altspace-poker/issues"
     },
     "homepage": "https://github.com/AltspaceVR/altspace-poker#readme",
+    "dependencies": {
+        "lodash": "^4.16.0"
+    },
     "devDependencies": {
         "eslint": "^3.5.0",
         "jasmine": "^2.5.2"

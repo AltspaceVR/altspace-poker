@@ -12,6 +12,14 @@ function Card(number, suit) {
 Card.numArray = [2, 3, 4, 5, 6, 7, 8, 9, 10, "jack", "queen", "king", "ace"];
 Card.suitArray = ["clubs", "diamonds", "hearts", "spades"];
 Card.suitSymbols = ["♣", "♦", "♥", "♠"];
+Card.orderedDeck = (function() {
+    var cards = [];
+    for (var i = 0; i < Card.numArray.length; i++) {
+        for (var j = 0; j < Card.suitArray.length; j++) {
+            cards.push(new Card(i, Card.suitArray[j]));
+        }
+    }
+}());
 
 Card.prototype.friendlyRepresentation = function() {
     return Card.suitSymbols[Card.suitArray.indexOf(this.suit)] + " " + Card.numArray[this.number];
