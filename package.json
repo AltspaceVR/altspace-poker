@@ -1,0 +1,25 @@
+{
+    "name": "altspace-poker",
+    "version": "0.1.0",
+    "description": "Texas Hold'em implementation for Altspace.",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/AltspaceVR/altspace-poker.git"
+    },
+    "author": "",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/AltspaceVR/altspace-poker/issues"
+    },
+    "homepage": "https://github.com/AltspaceVR/altspace-poker#readme",
+    "devDependencies": {
+        "eslint": "^3.5.0"
+    },
+    "scripts": {
+        "lint" : "./node_modules/.bin/eslint src/js"
+    }
+}
