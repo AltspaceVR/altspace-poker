@@ -1,58 +1,5 @@
-function createHiddenCardGeom() {
-    return createCardGeom({}, false, false);
-}
-
-function createCardGeom(theCard, doubleSided, visible) {
-    doubleSided = doubleSided || false;
-    if (typeof theCard.geom !== "undefined") {
-        //theCard.geom.parent.remove(theCard.geom);
-        //delete theCard.geom;
-        return theCard.geom;
-    }
-
-    console.log('cloning the card models');
-
-    var cardfront = theGame.models.CardFront.clone();
-    cardfront.scale.set(300, 300, 300);
-    var material;
-    if (!visible) {
-        material = new THREE.MeshBasicMaterial({color:'#000000'});
-        material.side = THREE.DoubleSide;
-    } else {
-        cardfront.scale.setX(-cardfront.scale.x);
-        material = new THREE.MeshBasicMaterial({color:'#FFFFFF', map: new THREE.Texture(theCard.image)});
-        material.side = THREE.BackSide;
-    }
-    //var material = new THREE.MeshBasicMaterial({color:'#FFFFFF', map: new THREE.Texture(theCard.image)});
-    for (var j = 0; j < cardfront.children.length; j++) {
-        var mesh = cardfront.children[j];
-        mesh.material = material;
-    }
-    var card = new THREE.Object3D();
-
-    card.add(cardfront);
-
-    if (doubleSided) {
-        var othercardfront = cardfront.clone();
-        othercardfront.rotation.y = Math.PI;
-        card.add(othercardfront);
-        theGame.sharedCardContainer.add(card);
-    } else {
-        var cardback = theGame.models.CardBack.clone();
-        card.add(cardback);
-        sim.scene.add(card);
-    }
-
-    card.position.copy(tableOffset);
-    card.position.y += cardTemplate.height/2;
-
-    //sim.scene.add(card);
-    theCard.geom = card;
-    return card;
-}
-
 var betStep = function(game) {
-    toggleVisible(game.betCube, true);// game.betCube.visible = true;
+    Utils.toggleVisible(game.betCube, true);// game.betCube.visible = true;
     game.resetDealers();
     game.resetBetters();
     game.better = 0;
@@ -100,7 +47,7 @@ function _checkForDoneBetting() {
              }*/
             if (globalUserId === theGame.dealingOrder[theGame.dealer].userId && theGame.nudged === false) {
                 //show the step change UI
-                toggleVisible(theGame.dealingOrder[theGame.dealer].dealerChip.mesh, true);
+                Utils.toggleVisible(theGame.dealingOrder[theGame.dealer].dealerChip.mesh, true);
                 window.setTimeout(function(){
                     var dealMessage = new errorMessage({timeToDisappear:2000, messageType:1, message:"Click me to continue!",scale:0.4,pos:theGame.dealingOrder[theGame.dealer].dealerUI.mesh.getWorldPosition()});
                 }, 10);
@@ -128,12 +75,12 @@ var texasHoldEm = {
                 sendUpdate({authority:globalUserId, dealer: game.dealer, deck: getSafeCards({cards: game.deck.cards}), blind: game.smallBlind, blindStartTime: game.timeBlindStarted}, "startHand");
                 game.resetSharedRotation();
 
-                for(var i=0; i<game.players.length; i++){
-                    toggleVisible(game.players[i].dealerChip.mesh, false);
+                for (var i = 0; i < game.players.length; i++) {
+                    Utils.toggleVisible(game.players[i].dealerChip.mesh, false);
                 }
 
-                toggleVisible(game.dealingOrder[game.dealer].dealerChip.mesh, true);
-                toggleVisible(game.dealingOrder[game.dealer].dealerUI.mesh, false);
+                Utils.toggleVisible(game.dealingOrder[game.dealer].dealerChip.mesh, true);
+                Utils.toggleVisible(game.dealingOrder[game.dealer].dealerUI.mesh, false);
 
                 game.start();
                 //since only the dealer will do this step, we can assume the globalUserId is the dealer
@@ -168,7 +115,7 @@ var texasHoldEm = {
         { //3
             execClient: function(game) {
 
-                toggleVisible(game.betCube, false);
+                Utils.toggleVisible(game.betCube, false);
 
                 for (var i = 0; i < game.sharedCards.cards.length; i++) {
                     game.sharedCards.cards[i] = game.deck.getCard(game.sharedCards.cards[i], true, true);
@@ -199,7 +146,7 @@ var texasHoldEm = {
         },
         { //5
             execClient: function(game) {
-                toggleVisible(game.betCube, false);
+                Utils.toggleVisible(game.betCube, false);
                 game.sharedCards.cards[3] = game.deck.getCard(game.sharedCards.cards[3], true, true);
                 var toPlayerTween = new TWEEN.Tween(game.sharedCards.cards[3].movementTween.position).to(getSharedCardPosition(3), 500);
                 toPlayerTween.onUpdate((function(card) {
@@ -225,7 +172,7 @@ var texasHoldEm = {
         },
         { //7
             execClient: function(game) {
-                toggleVisible(game.betCube, false);
+                Utils.toggleVisible(game.betCube, false);
                 game.sharedCards.cards[4] = game.deck.getCard(game.sharedCards.cards[4], true, true);
                 var toPlayerTween = new TWEEN.Tween(game.sharedCards.cards[4].movementTween.position).to(getSharedCardPosition(4), 500);
                 toPlayerTween.onUpdate((function(card) {
@@ -412,11 +359,4 @@ function awardMoney(playerList) {
 
     var player = playerList[0];
     var threshold = player.totalBet;
-}
-
-function toggleVisible(object, visible) {
-    object.visible = visible;
-    for (var i = 0, max = object.children.length; i < max; i++) {
-        toggleVisible(object.children[i], visible);
-    }
 }

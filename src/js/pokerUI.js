@@ -544,10 +544,10 @@ function bettingUI(player) {
 }
 
 bettingUI.prototype.toggleBetUI = function(showMesh) {
-    toggleVisible(this.betMesh, false);
-    toggleVisible(this.raiseMesh, false);
-    toggleVisible(this.callMesh, false);
-    toggleVisible(showMesh, true);
+    Utils.toggleVisible(this.betMesh, false);
+    Utils.toggleVisible(this.raiseMesh, false);
+    Utils.toggleVisible(this.callMesh, false);
+    Utils.toggleVisible(showMesh, true);
 };
 
 bettingUI.prototype.updateBet = function(amount) {
@@ -657,7 +657,7 @@ function advanceUI(chip) {
 
     card.addBehaviors({awake: function(obj) {
         obj.addEventListener('cursordown', function() {
-            toggleVisible(card, false);
+            Utils.toggleVisible(card, false);
             sendUpdate({authority:theGame.currentAuthority}, "requestFinishBetting", {thenUpdate: true});
         });
     }});
@@ -943,11 +943,11 @@ function startGame(player) {
             theGame.dealer = theGame.dealingOrder.indexOf(pl);
             theGame.rotateDealers();
             for (var i = 0; i < theGame.players.length; i++) {
-                toggleVisible(theGame.players[i].dealerChip.mesh, false);
+                Utils.toggleVisible(theGame.players[i].dealerChip.mesh, false);
             }
 
-            toggleVisible(theGame.dealingOrder[theGame.dealer].dealerChip.mesh, true);
-            toggleVisible(theGame.dealingOrder[theGame.dealer].dealerUI.mesh, false);
+            Utils.toggleVisible(theGame.dealingOrder[theGame.dealer].dealerChip.mesh, true);
+            Utils.toggleVisible(theGame.dealingOrder[theGame.dealer].dealerUI.mesh, false);
 
             theGame.step = 0;//do the initialization in the game controller
             theGame.timeBlindStarted = Date.now();

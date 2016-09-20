@@ -1,13 +1,9 @@
-function Card(number, suit) {
+var _ = require("lodash");
+
+Card = this.Card = function(number, suit) {
     this.number = number;
     this.suit = suit;
-    this.image = document.createElement('img');
-    this.image.src = this.filename();
-    this.movementTween = {
-        position: new THREE.Vector3(0, 0, 0),
-        rotation: new THREE.Vector3(0, 0, 0)
-    };
-}
+};
 
 Card.numArray = [2, 3, 4, 5, 6, 7, 8, 9, 10, "jack", "queen", "king", "ace"];
 Card.suitArray = ["clubs", "diamonds", "hearts", "spades"];
@@ -19,7 +15,24 @@ Card.orderedDeck = (function() {
             cards.push(new Card(i, Card.suitArray[j]));
         }
     }
+    return cards;
 }());
+
+Card.fromName = function(name) {
+    var match = name.match(/(\w+) of (\w+)/);
+    if (match) {
+        var number = _.findIndex(Card.numArray, function(x) { return x.toString() === match[1]; });
+        var suit = _.findIndex(Card.suitArray, function(x) { return x.toString() === match[2]; });
+        if (number != null && suit != null) {
+            return new Card(number, Card.suitArray[suit]);
+        }
+    }
+    throw new Error(name + " is not the name of a card.");
+};
+
+Card.prototype.toName = function() {
+    return Card.numArray[this.number].toString() + " of " + this.suit;
+};
 
 Card.prototype.friendlyRepresentation = function() {
     return Card.suitSymbols[Card.suitArray.indexOf(this.suit)] + " " + Card.numArray[this.number];
@@ -37,9 +50,6 @@ Card.prototype.filename = function() {
 
 
 Card.hasMultiples = function(cards, numberOfMultiples) {
-    if (numberOfMultiples <= 1) {
-        console.log('need to check for more than one card!');
-    }
     var sortedCards = [];
     for (var i = 0; i < cards.length; i++) {
         if (typeof(sortedCards[cards[i].number]) == "undefined") {
@@ -100,6 +110,7 @@ Card.isStraight = function(cards) {
         }
     });
 
+    console.log(theseCards);
     var numTries = cards.length - 5;
     //we have this many attempts to find a straight
 

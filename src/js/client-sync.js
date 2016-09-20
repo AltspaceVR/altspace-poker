@@ -194,11 +194,11 @@ function processUpdates(newUpdates) {
                 //theGame.step = 1;
                 theGame.dealer = data.dealer;
                 for (var i = 0; i < theGame.players.length; i++) {
-                    toggleVisible(theGame.players[i].dealerChip.mesh, false);
+                    Utils.toggleVisible(theGame.players[i].dealerChip.mesh, false);
                 }
 
-                toggleVisible(theGame.dealingOrder[theGame.dealer].dealerChip.mesh, true);
-                toggleVisible(theGame.dealingOrder[theGame.dealer].dealerUI.mesh, false);
+                Utils.toggleVisible(theGame.dealingOrder[theGame.dealer].dealerChip.mesh, true);
+                Utils.toggleVisible(theGame.dealingOrder[theGame.dealer].dealerUI.mesh, false);
 
                 /*
                  var words = theGame.players[theGame.dealer].name + " dealt a new hand!";
@@ -281,8 +281,8 @@ function processUpdates(newUpdates) {
 
                 var thisPlayer = theGame.players[data.winnerByForfeit.spot];
                 theGame.resetCards();
-                toggleVisible(theGame.winCube, false);
-                toggleVisible(theGame.betCube, false);
+                Utils.toggleVisible(theGame.winCube, false);
+                Utils.toggleVisible(theGame.betCube, false);
 
                 var handObj = thisPlayer.hand;
                 var pos = new THREE.Vector3();
@@ -333,11 +333,11 @@ function processUpdates(newUpdates) {
 
                 for (var i = 0; i < theGame.players.length; i++) {
                     theGame.players[i].state = -3;
-                    toggleVisible(theGame.players[i].optionsui.mesh, true);
-                    toggleVisible(theGame.players[i].optionsui.lockButton, false);
-                    toggleVisible(theGame.players[i].optionsui.refreshButton, true);
+                    Utils.toggleVisible(theGame.players[i].optionsui.mesh, true);
+                    Utils.toggleVisible(theGame.players[i].optionsui.lockButton, false);
+                    Utils.toggleVisible(theGame.players[i].optionsui.refreshButton, true);
                 }
-                toggleVisible(theGame.startGameButton, false);
+                Utils.toggleVisible(theGame.startGameButton, false);
                 setTimeout(function(){
                     theGame.resetCards();
                     document.querySelector("svg .winner").textContent = "Congratulations "+name+"!";
@@ -348,7 +348,7 @@ function processUpdates(newUpdates) {
                 break;
             case "playerWin":
 
-                toggleVisible(theGame.betCube, false);
+                Utils.toggleVisible(theGame.betCube, false);
                 var highestHands = data.hands;
                 var handOrder = Object.keys(highestHands).map(function(val){return parseInt(val)});
                 handOrder.sort(function(a, b) { //sorting in reverse order
@@ -535,7 +535,7 @@ function processUpdates(newUpdates) {
                 for (var i = 0; i < theGame.players.length; i++) {
                     theGame.players[i].state = data.endstatePlayers[i].state;
                     theGame.players[i].money = data.endstatePlayers[i].money;
-                    toggleVisible(theGame.players[i].optionsui.mesh, false);
+                    Utils.toggleVisible(theGame.players[i].optionsui.mesh, false);
                 }
                 theGame.resetCards();
                 cutoffTime = newUpdates[x].timestamp;
@@ -545,7 +545,7 @@ function processUpdates(newUpdates) {
                 //we're about to get a hell of a lot of new updates
                 authority = theGame.players[data.transferControl].userId;
 
-                toggleVisible(theGame.players[data.transferControl].optionsui.mesh, true);
+                Utils.toggleVisible(theGame.players[data.transferControl].optionsui.mesh, true);
 
                 if (theGame.players[data.transferControl].userId === globalUserId) {
 

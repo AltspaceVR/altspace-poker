@@ -65,3 +65,10 @@ Utils.mergeDeep = function(target, source) {
     }
     return target;
 };
+
+Utils.toggleVisible = function(object, visible) {
+    object.visible = visible;
+    for (var i = 0, max = object.children.length; i < max; i++) {
+        Utils.toggleVisible(object.children[i], visible);
+    }
+};

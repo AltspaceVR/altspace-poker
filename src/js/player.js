@@ -41,15 +41,13 @@ Player.prototype.renderVisuals = function(timeSince) {
         case -3:
             //spot is locked
             //hide everything
-            toggleVisible(this.bettingui.mesh, false);
-            //toggleVisible(this.optionsui.mesh, false);
-            toggleVisible(this.hand, false);
-            toggleVisible(this.chipCount.mesh, false);
-            toggleVisible(this.dealerChip.mesh, false);
-            toggleVisible(this.dealerUI.mesh, false);
-
-            toggleVisible(this.joinButton.mesh, false);
-
+            Utils.toggleVisible(this.bettingui.mesh, false);
+            //Utils.toggleVisible(this.optionsui.mesh, false);
+            Utils.toggleVisible(this.hand, false);
+            Utils.toggleVisible(this.chipCount.mesh, false);
+            Utils.toggleVisible(this.dealerChip.mesh, false);
+            Utils.toggleVisible(this.dealerUI.mesh, false);
+            Utils.toggleVisible(this.joinButton.mesh, false);
             break;
         case -2:
 
@@ -90,23 +88,20 @@ Player.prototype.renderVisuals = function(timeSince) {
             if (this.money === 0) {
                 this.money = startingMoney;
             }
-            toggleVisible(this.hand, true);
-            toggleVisible(this.dealerChip.mesh, false);
-            toggleVisible(this.dealerUI.mesh, false);
-
-            toggleVisible(this.joinButton.mesh, true);
-            toggleVisible(this.chipCount.mesh, false);
-            toggleVisible(this.bettingui.mesh, false);
-            toggleVisible(this.optionsui.mesh, false);
-
-
+            Utils.toggleVisible(this.hand, true);
+            Utils.toggleVisible(this.dealerChip.mesh, false);
+            Utils.toggleVisible(this.dealerUI.mesh, false);
+            Utils.toggleVisible(this.joinButton.mesh, true);
+            Utils.toggleVisible(this.chipCount.mesh, false);
+            Utils.toggleVisible(this.bettingui.mesh, false);
+            Utils.toggleVisible(this.optionsui.mesh, false);
             break;
         case 0:
             //someone playing, they haven't started yet
             //make buttons and UI
 
-            toggleVisible(this.joinButton.mesh, false);
-            toggleVisible(this.chipCount.mesh, true);
+            Utils.toggleVisible(this.joinButton.mesh, false);
+            Utils.toggleVisible(this.chipCount.mesh, true);
             this.renderChips();
 
 
@@ -126,15 +121,15 @@ Player.prototype.renderVisuals = function(timeSince) {
                 this.startGame.mesh.rotation.y = Math.PI/8;
                 theGame.startGameButton = this.startGame.mesh;
                 if(this.userId !== globalUserId){
-                    toggleVisible(theGame.startGameButton, false);
+                    Utils.toggleVisible(theGame.startGameButton, false);
                 }else{
-                    toggleVisible(this.optionsui.mesh, true);
+                    Utils.toggleVisible(this.optionsui.mesh, true);
                 }
             }
 
             break;
         case 1:
-            toggleVisible(theGame.startGameButton, false);
+            Utils.toggleVisible(theGame.startGameButton, false);
             //give cards to player
             var offset = 0;
             for (var i = 0; i < this.cards.length; i++) {
@@ -158,15 +153,15 @@ Player.prototype.renderVisuals = function(timeSince) {
             break;
         case 2:
             //waiting
-            toggleVisible(this.bettingui.mesh, false);
+            Utils.toggleVisible(this.bettingui.mesh, false);
             //move the cube to someone else
 
             break;
         case 3:
             //this players turn to bet
             //put the bet cube over this player
-            toggleVisible(this.bettingui.mesh, true);
-            toggleVisible(theGame.betCube, true);
+            Utils.toggleVisible(this.bettingui.mesh, true);
+            Utils.toggleVisible(theGame.betCube, true);
 
             //make sure we have enough money
             if((theGame.currentBet - this.betThisRound) <= this.money){
@@ -190,7 +185,7 @@ Player.prototype.renderVisuals = function(timeSince) {
             break;
         case 4:
             //folded, out for this round
-            toggleVisible(this.bettingui.mesh, false);
+            Utils.toggleVisible(this.bettingui.mesh, false);
 
             break;
         }

@@ -49,12 +49,7 @@ Deck.prototype.getCard = function(theCard, large, visible) {
     if (theCard instanceof Card) {
         thisCard = theCard;
     } else {
-        for (var i = 0; i < Card.orderedDeck.length; i++) {
-            if (Card.orderedDeck[i].number === theCard.number && Card.orderedDeck[i].suit === theCard.suit) {
-                thisCard = Card.orderedDeck[i];
-                break;
-            }
-        }
+        thisCard = _.find(Card.orderedDeck, function(card) { return card.number === theCard.number && card.suit === theCard.suit; });
     }
 
     if (!visible) {
@@ -67,18 +62,82 @@ Deck.prototype.getCard = function(theCard, large, visible) {
         thisCard.geom.userData.large = large;
         if (large) {
             thisCard.geom.scale.set(1.5, 1.5, 1);
-            toggleVisible(thisCard.geom, true);
+            Utils.toggleVisible(thisCard.geom, true);
             thisCard.movementTween.rotation.copy(thisCard.geom.rotation);
             thisCard.movementTween.position.copy(thisCard.geom.position);
         } else {
             thisCard.geom.position.set(0, tableOffset.y - cardTemplate.height/2 + 10, 0);
             thisCard.geom.rotation.set(Math.PI/2, 0, 0);
             thisCard.geom.scale.set(1, 1, 1);
-            toggleVisible(thisCard.geom, true);
+            Utils.toggleVisible(thisCard.geom, true);
         }
     }
     return thisCard;
 };
+
+function createHiddenCardGeom() {
+    return createCardGeom({}, false, false);
+}
+
+function createCardGeom(theCard, doubleSided, visible) {
+    doubleSided = doubleSided || false;
+    if (typeof theCard.geom !== "undefined") {
+        //theCard.geom.parent.remove(theCard.geom);
+        //delete theCard.geom;
+        return theCard.geom;
+    }
+
+    console.log('cloning the card models');
+
+    if (!theCard.movementTween) {
+        theCard.movementTween = {
+            position: new THREE.Vector3(0, 0, 0),
+            rotation: new THREE.Vector3(0, 0, 0)
+        };
+    }
+    if (!theCard.image) {
+        theCard.image = document.createElement('img');
+        theCard.image.src = this.filename();
+    }
+
+    var cardfront = theGame.models.CardFront.clone();
+    cardfront.scale.set(300, 300, 300);
+    var material;
+    if (!visible) {
+        material = new THREE.MeshBasicMaterial({color:'#000000'});
+        material.side = THREE.DoubleSide;
+    } else {
+        cardfront.scale.setX(-cardfront.scale.x);
+        material = new THREE.MeshBasicMaterial({color:'#FFFFFF', map: new THREE.Texture(theCard.image)});
+        material.side = THREE.BackSide;
+    }
+    //var material = new THREE.MeshBasicMaterial({color:'#FFFFFF', map: new THREE.Texture(theCard.image)});
+    for (var j = 0; j < cardfront.children.length; j++) {
+        var mesh = cardfront.children[j];
+        mesh.material = material;
+    }
+    var card = new THREE.Object3D();
+
+    card.add(cardfront);
+
+    if (doubleSided) {
+        var othercardfront = cardfront.clone();
+        othercardfront.rotation.y = Math.PI;
+        card.add(othercardfront);
+        theGame.sharedCardContainer.add(card);
+    } else {
+        var cardback = theGame.models.CardBack.clone();
+        card.add(cardback);
+        sim.scene.add(card);
+    }
+
+    card.position.copy(tableOffset);
+    card.position.y += cardTemplate.height/2;
+
+    //sim.scene.add(card);
+    theCard.geom = card;
+    return card;
+}
 
 /*deck.prototype.makeGenericCard = function(){
  var manager = new THREE.LoadingManager();

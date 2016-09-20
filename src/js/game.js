@@ -54,7 +54,7 @@ Game.prototype.resetCards = function() {
             delete player.cards[j].geom;
         }
         player.cards = [];
-        toggleVisible(player.bettingui.mesh, false);
+        Utils.toggleVisible(player.bettingui.mesh, false);
     }
 
     for (var i = 0; i < Card.orderedDeck.length; i++) {
@@ -247,11 +247,11 @@ Game.prototype.nextHand = function() {
     authority = globalUserId;
     //create a new round record, send it to everyone
     for (var i = 0; i < this.players.length; i++) {
-        toggleVisible(this.players[i].dealerChip.mesh, false);
+        Utils.toggleVisible(this.players[i].dealerChip.mesh, false);
     }
 
-    toggleVisible(this.dealingOrder[this.dealer].dealerChip.mesh, true);
-    toggleVisible(theGame.dealingOrder[theGame.dealer].dealerUI.mesh, false);
+    Utils.toggleVisible(this.dealingOrder[this.dealer].dealerChip.mesh, true);
+    Utils.toggleVisible(theGame.dealingOrder[theGame.dealer].dealerUI.mesh, false);
 
     //start level
     setTimeout((function(tehGame) {

@@ -636,8 +636,8 @@ function main(){
     theGame.betCube.addBehaviors(alt.Spin({speed: 0.0000001}));
     //theGame.betCube.visible = false;
     //theGame.winCube.visible = false;
-    toggleVisible(theGame.betCube, false);
-    toggleVisible(theGame.winCube, false);
+    Utils.toggleVisible(theGame.betCube, false);
+    Utils.toggleVisible(theGame.winCube, false);
     theGame.cardsToDeck = cardsToDeck;
 
     theGame.potHolder = new THREE.Object3D();
