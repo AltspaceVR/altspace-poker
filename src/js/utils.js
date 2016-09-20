@@ -1,4 +1,4 @@
-Utils = Utils || {};
+Utils = {};
 
 Utils.arraysEqual = function(a, b) {
     if (a === b) return true;

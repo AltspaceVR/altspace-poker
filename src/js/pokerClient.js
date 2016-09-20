@@ -158,8 +158,7 @@ function ready(firstInstance) {
         theGame.players.push(new Player(i));
     }
 
-    setupSounds();
-
+    soundEngine = initializeSoundEngine();
 
     // window.setTimeout(function(){
 
@@ -785,5 +784,3 @@ function initializeSoundEngine(){
     bufferLoader.load();
     return engine;
 }
-
-soundEngine = initializeSoundEngine();

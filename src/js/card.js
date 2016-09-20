@@ -1,4 +1,6 @@
-var _ = require("lodash");
+if (typeof require != "undefined") {
+    _ = require("lodash");
+}
 
 Card = this.Card = function(number, suit) {
     this.number = number;
