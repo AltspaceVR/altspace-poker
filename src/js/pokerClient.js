@@ -3,30 +3,30 @@
 // Setup
 
 var sim = altspace.utilities.Simulation({
-  auto: false
+    auto: false
 });
 var inCodePen = altspace.utilities.codePen.inCodePen;
 var instanceBase;
 var sceneSync;
 
 altspace.utilities.sync.connect({
-		appId: "AltSpacePoker",
-        authorId: "Fox",
+    appId: "AltSpacePoker",
+    authorId: "Fox",
     instanceId: null
-}).then(function(connection){
+}).then(function(connection) {
     if (location.href.indexOf('altspace-sync-instance') === -1) {
         console.log('waiting for refresh');
         return;
     }
     instanceBase = connection.instance;
-   console.log('we have the instance');
-   sceneSync = altspace.utilities.behaviors.SceneSync(instanceBase, {
+    console.log('we have the instance');
+    sceneSync = altspace.utilities.behaviors.SceneSync(instanceBase, {
         instantiators: {},
         ready: ready
-    })
+    });
     sim.scene.addBehavior(sceneSync);
     sim.scene.updateAllBehaviors();
-})
+});
 
 
 var startingMoney = 1337;
@@ -38,9 +38,9 @@ var potPosition = new THREE.Vector3();
 potPosition.set(115, tableOffset.y - 18.5, 0);
 
 var cardTemplate = {
-  width: 25,
-  height: 35, 
-  padding: 10 
+    width: 25,
+    height: 35,
+    padding: 10
 };
 
 
@@ -50,22 +50,22 @@ var globalPlayerIndex = -1;
 var globalPlayerHead;
 
 //function makeGame(){
-  //theGame = new game();
-  //syncingObject = new THREE.Object3D();
- // syncingObject.addBehaviors(alt.Object3DSync({syncData: true})); 
- // syncingObject.userData.syncData = theGame;//{that:"testThing"};  //theGame;//.players[0];  
- // console.log(syncingObject.userData);
-  //theGame.syncTrigger = syncingObject.getBehaviorByType('Object3DSync'); 
-  //console.log(theGame.syncTrigger); 
-  
-  //main();
-  //return syncingObject; 
+//theGame = new game();
+//syncingObject = new THREE.Object3D();
+// syncingObject.addBehaviors(alt.Object3DSync({syncData: true}));
+// syncingObject.userData.syncData = theGame;//{that:"testThing"};  //theGame;//.players[0];
+// console.log(syncingObject.userData);
+//theGame.syncTrigger = syncingObject.getBehaviorByType('Object3DSync');
+//console.log(theGame.syncTrigger);
+
+//main();
+//return syncingObject;
 //}
- 
+
 
 
 var tableTexImg = document.createElement('img');
-tableTexImg.src = "assets/Models/TableTexture.png";  
+tableTexImg.src = "assets/Models/TableTexture.png";
 var tableMat = new THREE.MeshBasicMaterial({map:new THREE.Texture(tableTexImg)});
 
 var bettingTexImg = document.createElement('img');
@@ -104,151 +104,139 @@ var chipMatContainer = {
     green: greenMat,
     red: redMat,
     white: whiteMat
-}
-
+};
 
 var basicMat = new THREE.MeshBasicMaterial({color: "#FFFFFF"});
-
-
-
 
 /*
 
 
-window.onload = init;
-var context;
-var bufferLoader;
+ window.onload = init;
+ var context;
+ var bufferLoader;
 
-function init() {
-  // Fix up prefixing
-  window.AudioContext = window.AudioContext || window.webkitAudioContext;
-  context = new AudioContext();
+ function init() {
+ // Fix up prefixing
+ window.AudioContext = window.AudioContext || window.webkitAudioContext;
+ context = new AudioContext();
 
-  bufferLoader = new BufferLoader(
-    context,
-    [
-      '../sounds/hyper-reality/br-jam-loop.wav',
-      '../sounds/hyper-reality/laughter.wav',
-    ],
-    finishedLoading
-    );
+ bufferLoader = new BufferLoader(
+ context,
+ [
+ '../sounds/hyper-reality/br-jam-loop.wav',
+ '../sounds/hyper-reality/laughter.wav',
+ ],
+ finishedLoading
+ );
 
-  bufferLoader.load();
-}
+ bufferLoader.load();
+ }
 
-function finishedLoading(bufferList) {
-  // Create two sources and play them both together.
-  var source1 = context.createBufferSource();
-  var source2 = context.createBufferSource();
-  source1.buffer = bufferList[0];
-  source2.buffer = bufferList[1];
+ function finishedLoading(bufferList) {
+ // Create two sources and play them both together.
+ var source1 = context.createBufferSource();
+ var source2 = context.createBufferSource();
+ source1.buffer = bufferList[0];
+ source2.buffer = bufferList[1];
 
-  source1.connect(context.destination);
-  source2.connect(context.destination);
-  source1.start(0);
-  source2.start(0);
-}
-
-
-*/
+ source1.connect(context.destination);
+ source2.connect(context.destination);
+ source1.start(0);
+ source2.start(0);
+ }
 
 
+ */
 
-function ready(firstInstance) { 
-    
+
+
+function ready(firstInstance) {
+
     theGame = new game();
-    theGame.deck = new deck(); 
+    theGame.deck = new deck();
     for(var i=0; i<6; i++){
-       theGame.players.push(new player(i));
+        theGame.players.push(new player(i));
     }
-    
+
     setupSounds();
-    
-    
-   // window.setTimeout(function(){
-
-        if(firstInstance){ 
-
-            cutoffTime = Date.now();
-
-            theGame.deck.shuffle(); 
-
-            theGame.roundRecord = [{title: "startedLevel", timestamp: Date.now()}]
-
-            instanceBase.child('game').set({title: "Initial data dump", data: theGame.roundRecord});
 
 
+    // window.setTimeout(function(){
+
+    if(firstInstance) {
+
+        cutoffTime = Date.now();
+
+        theGame.deck.shuffle();
+
+        theGame.roundRecord = [{title: "startedLevel", timestamp: Date.now()}]
+
+        instanceBase.child('game').set({title: "Initial data dump", data: theGame.roundRecord});
+
+
+    }
+
+
+
+    theGame.syncInstance = instanceBase.child('game');
+
+    theGame.syncInstance.once('value', function(newValue){
+
+        //once we know that we've recieved the first update, load the models
+
+
+
+        console.log('loading all models');
+        var models = {
+            fileBase : ['IndicationArrow', 'BettingText', 'WinnerText', 'MenuSidepanel', 'Menu', 'CardBack', 'CardFront', 'PokerChip', 'PokerTable6Sided'],
+            materials: [bettingMat, bettingMat, bettingMat, menuMat, menuMat, cardBackMat, basicMat, basicMat, tableMat]
+        };
+
+        altspace.utilities.multiloader.init({
+            baseUrl: "assets/Models"
+        });
+        var req = new altspace.utilities.multiloader.LoadRequest();
+
+        for (var i = 0; i < models.fileBase.length; i++) {
+            req.objUrls.push(models.fileBase[i]+".obj");
+            req.mtlUrls.push(models.fileBase[i]+".mtl");
         }
 
+        theGame.models = {};
 
+        altspace.utilities.multiloader.load(req, function() {
+            for(var i = 0; i < req.objects.length; i++){
 
-          theGame.syncInstance = instanceBase.child('game');       
-
-          theGame.syncInstance.once('value', function(newValue){
-
-            //once we know that we've recieved the first update, load the models
-
-
-
-            console.log('loading all models');
-            var models = {
-                fileBase : ['IndicationArrow', 'BettingText', 'WinnerText', 'MenuSidepanel', 'Menu', 'CardBack', 'CardFront', 'PokerChip', 'PokerTable6Sided'],
-                materials: [bettingMat, bettingMat, bettingMat, menuMat, menuMat, cardBackMat, basicMat, basicMat, tableMat]
-            }
-
-            altspace.utilities.multiloader.init({
-                baseUrl: "assets/Models"
-            })
-            var req = new altspace.utilities.multiloader.LoadRequest();
-
-            for(var i=0; i<models.fileBase.length; i++){
-                req.objUrls.push(models.fileBase[i]+".obj");
-                req.mtlUrls.push(models.fileBase[i]+".mtl");
-            }
-
-            theGame.models = {};
-
-            altspace.utilities.multiloader.load(req, function(){
-                for(var i=0; i<req.objects.length; i++){
-
-                    console.log(req.objects[i]);
-                    req.objects[i].scale.set(300, 300, 300);
-                    for(var j=0; j<req.objects[i].children.length; j++){
-                         var group = req.objects[i].children[j];
-                         group.material = models.materials[i];
-                    }
-                    theGame.models[models.fileBase[i]] = req.objects[i];
-
+                console.log(req.objects[i]);
+                req.objects[i].scale.set(300, 300, 300);
+                for(var j=0; j<req.objects[i].children.length; j++){
+                    var group = req.objects[i].children[j];
+                    group.material = models.materials[i];
                 }
-                var promises = [altspace.getUser(), altspace.getThreeJSTrackingSkeleton()]
-                Promise.all(promises).then(function(arr){
-                        var result = arr[0];
-                        globalUserId = result.userId;
-                        globalUserName = result.displayName;    
-                        
-                        var skeleton = arr[1];
-                        sim.scene.add(skeleton);
-                        globalPlayerHead = skeleton.getJoint('Head');
-                    
-                        createTable(); 
-                        main();
-                        theGame.syncInstance.on('value', onUpdateRecieved);  //turns out when you implement this inside the once clause
-                                                                         //It'll fire with the same update that triggered this
-                		
-                });
+                theGame.models[models.fileBase[i]] = req.objects[i];
 
-            })
+            }
+            var promises = [altspace.getUser(), altspace.getThreeJSTrackingSkeleton()]
+            Promise.all(promises).then(function(arr){
+                var result = arr[0];
+                globalUserId = result.userId;
+                globalUserName = result.displayName;
 
+                var skeleton = arr[1];
+                sim.scene.add(skeleton);
+                globalPlayerHead = skeleton.getJoint('Head');
 
+                createTable();
+                main();
+                theGame.syncInstance.on('value', onUpdateRecieved);  //turns out when you implement this inside the once clause
+                //It'll fire with the same update that triggered this
 
+            });
+        });
+    });
 
-
-
-          });
-      
-      
-   // }, 0);
-} 
+    // }, 0);
+}
 
 
 function soundEngines(){
@@ -262,55 +250,54 @@ function soundEngines(){
 }
 
 soundEngines.prototype.bufferLoaders = function BufferLoader(context, urlList, callback) {
-  this.context = context;
-  this.urlList = urlList;
-  this.onload = callback;
-  this.bufferList = new Array();
-  this.loadCount = 0;
-  this.volume = context.createGain();
-  this.volume.connect(context.destination);
-
-  this.volume.gain.value = 0.2;
-}
+    this.context = context;
+    this.urlList = urlList;
+    this.onload = callback;
+    this.bufferList = new Array();
+    this.loadCount = 0;
+    this.volume = context.createGain();
+    this.volume.connect(context.destination);
+    this.volume.gain.value = 0.2;
+};
 
 soundEngines.prototype.bufferLoaders.prototype.loadBuffer = function(url, index) {
-  // Load buffer asynchronously
-  var request = new XMLHttpRequest();
-  request.open("GET", url, true);
-  request.responseType = "arraybuffer";
+    // Load buffer asynchronously
+    var request = new XMLHttpRequest();
+    request.open("GET", url, true);
+    request.responseType = "arraybuffer";
 
-  var loader = this;
+    var loader = this;
 
-  request.onload = function() {
-    // Asynchronously decode the audio file data in request.response
-    loader.context.decodeAudioData(
-      request.response,
-      function(buffer) {
-        if (!buffer) {
-          alert('error decoding file data: ' + url);
-          return;
-        }
-        loader.bufferList[index] = buffer;
-        if (++loader.loadCount == loader.urlList.length)
-          loader.onload(loader.bufferList);
-      },
-      function(error) {
-        console.error('decodeAudioData error', error);
-      }
-    );
-  }
+    request.onload = function() {
+        // Asynchronously decode the audio file data in request.response
+        loader.context.decodeAudioData(
+            request.response,
+            function(buffer) {
+                if (!buffer) {
+                    alert('error decoding file data: ' + url);
+                    return;
+                }
+                loader.bufferList[index] = buffer;
+                if (++loader.loadCount == loader.urlList.length)
+                    loader.onload(loader.bufferList);
+            },
+            function(error) {
+                console.error('decodeAudioData error', error);
+            }
+        );
+    };
 
-  request.onerror = function() {
-    alert('BufferLoader: XHR error');
-  }
+    request.onerror = function() {
+        alert('BufferLoader: XHR error');
+    };
 
-  request.send();
-}
+    request.send();
+};
 
 soundEngines.prototype.bufferLoaders.prototype.load = function() {
-  for (var i = 0; i < this.urlList.length; ++i)
-  this.loadBuffer(this.urlList[i], i);
-}
+    for (var i = 0; i < this.urlList.length; ++i)
+        this.loadBuffer(this.urlList[i], i);
+};
 
 soundEngines.prototype.playSound = function(key){
     if(this.playing){
@@ -335,13 +322,12 @@ soundEngines.prototype.playSound = function(key){
             }
         }, this.sounds[key].duration);
     }
-    
-}
+};
 
 var soundEngine = new soundEngines();
 
 function setupSounds(){
-    
+
     soundEngine.sounds.winHand = {url:"assets/Audio/OculusAudioPack/sting_victory_electronic.wav"};
     soundEngine.sounds.loseShowdown = {url:"assets/Audio/OculusAudioPack/sting_loss_electric.wav"};
     soundEngine.sounds.loseHand = {url:"assets/Audio/OculusAudioPack/ui_casual_musical_back.wav"};
@@ -349,464 +335,425 @@ function setupSounds(){
     soundEngine.sounds.yourCheck = {url:"assets/Audio/OculusAudioPack/ui_casual_musical_confirm.wav"};
     soundEngine.sounds.busted = {url:"assets/Audio/OculusAudioPack/sting_loss_mallet.wav"};
     soundEngine.sounds.totalVictory = {url:"assets/Audio/OculusAudioPack/sting_victory_mallet.wav"};
-    
+
     window.AudioContext = window.AudioContext || window.webkitAudioContext;
     soundEngine.context = new AudioContext();
-    
+
     var assetList = [];
     var soundKeys = Object.keys(soundEngine.sounds);
     for(var i=0; i<soundKeys.length; i++){
         assetList.push(soundEngine.sounds[soundKeys[i]].url);
     }
-    
+
     var bufferLoader = new soundEngine.bufferLoaders(
         soundEngine.context,
         assetList,
         finishedLoading
-        );
+    );
 
     bufferLoader.load();
     soundEngine.bufferLoader = bufferLoader;
 
 
     function finishedLoading(bufferList) {
-        
-      for(var i=0; i<soundKeys.length; i++){
-          //var source = soundEngine.context.createBufferSource();
-         // source.buffer = bufferList[i];
-          soundEngine.sounds[soundKeys[i]].buffer = bufferList[i];
-      }
-        
-      /*
-      // Create two sources and play them both together.
-      var source1 = soundEngine.context.createBufferSource();
-      var source2 = soundEngine.context.createBufferSource();
-      source1.buffer = bufferList[0];
-      source2.buffer = bufferList[1];
 
-      source1.connect(soundEngine.context.destination);
-      source2.connect(soundEngine.context.destination);
-      source1.start(0);
-      source2.start(0);
-      */
+        for(var i=0; i<soundKeys.length; i++){
+            //var source = soundEngine.context.createBufferSource();
+            // source.buffer = bufferList[i];
+            soundEngine.sounds[soundKeys[i]].buffer = bufferList[i];
+        }
+
+        /*
+         // Create two sources and play them both together.
+         var source1 = soundEngine.context.createBufferSource();
+         var source2 = soundEngine.context.createBufferSource();
+         source1.buffer = bufferList[0];
+         source2.buffer = bufferList[1];
+
+         source1.connect(soundEngine.context.destination);
+         source2.connect(soundEngine.context.destination);
+         source1.start(0);
+         source2.start(0);
+         */
     }
-    
-    
-
 }
 
 
 
 function createTable(){
-            
-    
-     var table = theGame.models.PokerTable6Sided.clone();
-    
-                 
-     table.scale.set(300, 300, 300);
 
-     var deck = theGame.models.CardFront.clone();
-     
-        for(var i=0; i<deck.children.length; i++){
-                var group = deck.children[i];
-                group.material = cardBackMat;
-        }
-    
-     deck.scale.set(300, 300, 4000);
-     deck.rotation.set(-Math.PI/2, 0, 0);
-     deck.position.copy(tableOffset); 
-     deck.position.y -= 5;
-    
-    
-     sim.scene.add(deck);
-     sim.scene.add(table);
-     table.position.copy(tableOffset);
-     table.position.y -= 380;
+    var table = theGame.models.PokerTable6Sided.clone();
+    table.scale.set(300, 300, 300);
+
+    var deck = theGame.models.CardFront.clone();
+    for (var i = 0; i < deck.children.length; i++) {
+        var group = deck.children[i];
+        group.material = cardBackMat;
+    }
+
+    deck.scale.set(300, 300, 4000);
+    deck.rotation.set(-Math.PI/2, 0, 0);
+    deck.position.copy(tableOffset);
+    deck.position.y -= 5;
+
+    sim.scene.add(deck);
+    sim.scene.add(table);
+    table.position.copy(tableOffset);
+    table.position.y -= 380;
     console.log('table created');
-            
-
 }
 
-function createPotHolder(){
-  var geometry = new THREE.CylinderGeometry( 50, 50, 10, 12);
-  var material = new THREE.MeshBasicMaterial( {color: "grey"} );
-  var cylinder = new THREE.Mesh( geometry, material );
-  return cylinder;
+function createPotHolder() {
+    var geometry = new THREE.CylinderGeometry( 50, 50, 10, 12);
+    var material = new THREE.MeshBasicMaterial( {color: "grey"} );
+    var cylinder = new THREE.Mesh( geometry, material );
+    return cylinder;
 }
-
-
 
 function getCardPosition(numCards, index){
-  var fullOffset = (cardTemplate.width+cardTemplate.padding)/2 * (numCards - 1);
-  return{
-    x: (fullOffset - (cardTemplate.width+cardTemplate.padding) * index)
-  };
+    var fullOffset = (cardTemplate.width+cardTemplate.padding)/2 * (numCards - 1);
+    return{
+        x: (fullOffset - (cardTemplate.width+cardTemplate.padding) * index)
+    };
 }
 
-function arrangeCards(cards){
-  var numCards = cards.length;
-  fullOffset = (cardTemplate.width+cardTemplate.padding)/2 * (numCards - 1);
-  var card;
-  var hand = new THREE.Object3D();
-  sim.scene.add(hand); 
-  for(var i=0; i<numCards; i++){
-    card = cards[i].geom;
-    card.position.x -= (fullOffset - (cardTemplate.width+cardTemplate.padding) * i);
-    hand.add(card);
-  }
-  //put them in a hand and return the obj?
-  
-  return hand;
+function arrangeCards(cards) {
+    var numCards = cards.length;
+    var fullOffset = (cardTemplate.width+cardTemplate.padding)/2 * (numCards - 1);
+    var card;
+    var hand = new THREE.Object3D();
+    sim.scene.add(hand);
+    for(var i=0; i<numCards; i++){
+        card = cards[i].geom;
+        card.position.x -= (fullOffset - (cardTemplate.width+cardTemplate.padding) * i);
+        hand.add(card);
+    }
+    //put them in a hand and return the obj?
+
+    return hand;
 }
 
-function arrangeHand(hand, spotIndex){
+function arrangeHand(hand, spotIndex) {
     //later switch out for the physical positions of the players maybe?
     hand.position.y -= 10;
-   switch(spotIndex){
-           case 0:
+    switch(spotIndex){
+    case 0:
         hand.position.x = -195;
         hand.position.z = 112;
         hand.rotation.y = -Math.PI/3;
-           break;
-           case 1:
+        break;
+    case 1:
         hand.position.x = -195;
         hand.position.z = -112;
         hand.rotation.y = -2*Math.PI/3;
-           break;
-           case 2:
+        break;
+    case 2:
         hand.position.z = -225;
         hand.rotation.y = -Math.PI;
         break;
-           case 3:
+    case 3:
         hand.position.x = 195;
         hand.position.z = -112;
         hand.rotation.y = 2*Math.PI/3;
         break;
-           case 4:
+    case 4:
         hand.position.x = 195;
         hand.position.z = 112;
         hand.rotation.y = Math.PI/3;
         break;
-           case 5:
+    case 5:
         hand.position.z = 225;
         break;
-      
-      
-      
-      
-      
-       
-   }
-  
+    }
 }
 
-function toggleCardsBehavior(pl){
-  
-  var object;
-  var player;
-  var visible = true;
-  
-  function awake(obj){
-    player = pl;
-    object = obj;
-    object.addEventListener('cursordown', toggleCards);
-    
-  }
-  
-  function toggleCards(){
+function toggleCardsBehavior(pl) {
+
+    var object;
+    var player;
+    var visible = true;
+
+    function awake(obj) {
+        player = pl;
+        object = obj;
+        object.addEventListener('cursordown', toggleCards);
+    }
+
+    function toggleCards() {
+        var i;
         console.log("toggling!", player);
-        if(visible){
-          for(var i=0; i<player.cards.length; i++){
-            player.cards[i].geom.rotation.x = Math.PI/2;
-            player.cards[i].geom.position.y-= cardTemplate.height/2;
-            player.cards[i].geom.updateMatrix();
+        if (visible) {
+            for (i = 0; i < player.cards.length; i++) {
+                player.cards[i].geom.rotation.x = Math.PI/2;
+                player.cards[i].geom.position.y-= cardTemplate.height/2;
+                player.cards[i].geom.updateMatrix();
 
-          }
-        }else{
-          for(var i=0; i<player.cards.length; i++){
-            player.cards[i].geom.rotation.x = 0;
-            player.cards[i].geom.position.y+= cardTemplate.height/2;
-            player.cards[i].geom.updateMatrix();
+            }
+        } else {
+            for (i = 0; i < player.cards.length; i++) {
+                player.cards[i].geom.rotation.x = 0;
+                player.cards[i].geom.position.y+= cardTemplate.height/2;
+                player.cards[i].geom.updateMatrix();
 
-          }
+            }
         }
         visible = !visible;
-   }
-  
-  return {awake: awake};
-  
-  
+    }
+
+    return {awake: awake};
 }
 
-function makePot(){
-  //make a chipstack of theChips, at thePotHolder
-  for( var i = theGame.potHolder.children.length - 1; i >= 0; i--) { 
-    theGame.potHolder.remove(theGame.potHolder.children[i]);
-  }
-  for(var i=0; i<theGame.bettingPots.length; i++){
-      var offset = new THREE.Vector3(0, 0, i*-15);      
-      //amount += theGame.bettingPots[i].amount;
-      console.log(offset);
-      _renderChips(theGame.potHolder, theGame.bettingPots[i].amount, offset);
-  }
-  
+function makePot() {
+    //make a chipstack of theChips, at thePotHolder
+    for (var i = theGame.potHolder.children.length - 1; i >= 0; i--) {
+        theGame.potHolder.remove(theGame.potHolder.children[i]);
+    }
+    for (var i = 0; i<theGame.bettingPots.length; i++) {
+        var offset = new THREE.Vector3(0, 0, i*-15);
+        //amount += theGame.bettingPots[i].amount;
+        console.log(offset);
+        _renderChips(theGame.potHolder, theGame.bettingPots[i].amount, offset);
+    }
 }
 
-function renderChips(parent, amount, offset){
-  for( var i = parent.children.length - 1; i >= 0; i--) { 
-    parent.remove(parent.children[i]);
-  }
+function renderChips(parent, amount, offset) {
+    for (var i = parent.children.length - 1; i >= 0; i--) {
+        parent.remove(parent.children[i]);
+    }
 
     _renderChips(parent, amount, offset);
 }
 
-function _renderChips(parent, amount, offset){
-    
+function _renderChips(parent, amount, offset) {
     var chipStack = makeChipStack(amount);
-      if(typeof offset !== 'undefined'){
+    if (typeof offset !== 'undefined') {
         chipStack.position.add(offset);
-      }
-      parent.add(chipStack);
-    
+    }
+    parent.add(chipStack);
 }
 
+function makeChipStack(amount, spacing) {
+    var theMoney = amount;
+    var thisStack = 0;
+    var numChips = 0;
+    var cursor = 60;
+    spacing = spacing || 15;
 
+    var chipStack = new THREE.Object3D();
 
-function makeChipStack(amount, spacing){
-  var theMoney = amount;
-  var thisStack = 0;
-  var numChips = 0;
-  var cursor = 60;
-  spacing = spacing || 15; 
-  
-  var chipStack = new THREE.Object3D();
-  
-  while(theMoney > 0){
-    if(theMoney < 5){
-       var whiteChips = createChipStack(theMoney, "white");
-       chipStack.add(whiteChips);
-       //whiteChips.position.y += theMoney/2;
-       whiteChips.position.x = cursor;
-       theMoney = 0; 
-    }else if(theMoney < 10){
-      numChips = 0;
-      while(theMoney >= 5){
-         theMoney -= 5;
-         numChips ++;
-      }
-      var redChips = createChipStack(numChips, "red");
-      chipStack.add(redChips);
-      //redChips.position.y += numChips/2;
-      redChips.position.x = cursor;
-    }else if(theMoney < 25){
-      numChips = 0;
-      while(theMoney >= 10){
-         theMoney -= 10;
-         numChips ++;
-      }
-      var blueChips = createChipStack(numChips, "blue");
-      chipStack.add(blueChips); 
-      //blueChips.position.y += numChips/2;
-      blueChips.position.x = cursor;    
-    }else if(theMoney < 100){
-      numChips = 0;
-      while(theMoney >= 25){
-         theMoney -= 25;
-         numChips ++;
-      }
-      var greenChips = createChipStack(numChips, "green");
-      chipStack.add(greenChips);
-      //greenChips.position.y += numChips/2;
-      greenChips.position.x = cursor;
-      
-    }else{
-      numChips = 0;
-      while(theMoney >= 100){ 
-         theMoney -= 100;
-         numChips ++; 
-      }
-      var blackChips = createChipStack(numChips, "black");
-      chipStack.add(blackChips);
-      //blackChips.position.y += numChips/2;
-      blackChips.position.x = cursor;
-    } 
-    cursor += spacing;
-  }
-  //chipStack.position.copy(tableOffset);
-  return chipStack;
+    while (theMoney > 0) {
+        if (theMoney < 5) {
+            var whiteChips = createChipStack(theMoney, "white");
+            chipStack.add(whiteChips);
+            //whiteChips.position.y += theMoney/2;
+            whiteChips.position.x = cursor;
+            theMoney = 0;
+        } else if(theMoney < 10) {
+            numChips = 0;
+            while (theMoney >= 5) {
+                theMoney -= 5;
+                numChips ++;
+            }
+            var redChips = createChipStack(numChips, "red");
+            chipStack.add(redChips);
+            //redChips.position.y += numChips/2;
+            redChips.position.x = cursor;
+        } else if(theMoney < 25) {
+            numChips = 0;
+            while (theMoney >= 10) {
+                theMoney -= 10;
+                numChips ++;
+            }
+            var blueChips = createChipStack(numChips, "blue");
+            chipStack.add(blueChips);
+            //blueChips.position.y += numChips/2;
+            blueChips.position.x = cursor;
+        } else if (theMoney < 100) {
+            numChips = 0;
+            while(theMoney >= 25){
+                theMoney -= 25;
+                numChips ++;
+            }
+            var greenChips = createChipStack(numChips, "green");
+            chipStack.add(greenChips);
+            //greenChips.position.y += numChips/2;
+            greenChips.position.x = cursor;
+
+        } else {
+            numChips = 0;
+            while (theMoney >= 100) {
+                theMoney -= 100;
+                numChips ++;
+            }
+            var blackChips = createChipStack(numChips, "black");
+            chipStack.add(blackChips);
+            //blackChips.position.y += numChips/2;
+            blackChips.position.x = cursor;
+        }
+        cursor += spacing;
+    }
+    //chipStack.position.copy(tableOffset);
+    return chipStack;
 }
 
-function createChipStack(amount, denominationColor){
-  
+function createChipStack(amount, denominationColor) {
+
     //var geometry = new THREE.CylinderGeometry( 5, 5, amount, 6);
     //var material = new THREE.MeshBasicMaterial( {color: denominationColor} );
     var chip = theGame.models.PokerChip.clone();
-    
+
     chip.scale.set(200, 200, 200);
-    
-    for(var i=0; i<chip.children.length; i++){
+
+    for (var i = 0; i < chip.children.length; i++) {
         var group = chip.children[i];
         group.material = chipMatContainer[denominationColor];
     }
-    
+
     var group = new THREE.Object3D();
-    
+
     var heightOffset = 1.35;
-    
-    for(var i=0; i<amount; i++){
+
+    for (var i = 0; i < amount; i++) {
         var thisChip = chip.clone();
         thisChip.position.y += i*heightOffset;
         group.add(thisChip);
     }
-    
+
     //cylinder.position.copy(tableOffset);
     return group;
 }
 
-function giveCard(cards, toObj, i){ 
-            
-            var thisCard = cards[i];
-             
-            
-            //thisCard = theGame.deck.getCard(thisCard);
-            //cards[i] = thisCard;
-                 
-    
-            thisCard.movementTween.rotation.copy(thisCard.geom.rotation); 
-            thisCard.movementTween.position.copy(thisCard.geom.position);
-  
-            var toRotationTween = new TWEEN.Tween(thisCard.movementTween.rotation).to({z: -toObj.rotation.y}, 1000);
-            toRotationTween.onUpdate((function(card){
-              return function(value1){ 
-                //rotate the cards to face the players 
-                if(typeof card.geom !== 'undefined'){
-                  card.geom.rotation.setFromVector3(card.movementTween.rotation); 
-                }
-               } 
-            }(thisCard)));
-            
-  
-            var toPlayerTween = new TWEEN.Tween(thisCard.movementTween.position).to({x:toObj.position.x, z: toObj.position.z}, 2000);
-            toPlayerTween.onUpdate((function(card){
-              return function(value1){
-                  //move the cards to the player
-                if(typeof card.geom !== 'undefined'){
-                    card.geom.position.copy(card.movementTween.position);
-                }
-              }
-            }(thisCard)));
-  
-            toPlayerTween.onComplete((function(card, hand){
-              return function(value1){
-                
-                //add the cards to the 'hand' object
-                if(typeof card.geom !== 'undefined'){
+function giveCard(cards, toObj, i) {
 
-                    THREE.SceneUtils.attach(card.geom, sim.scene, hand);
-                    hand.updateMatrixWorld();
-                 
-                    //our position has updated, so lets update the movementTween
-                    card.movementTween.position.copy(card.geom.position); 
-                    card.movementTween.rotation.set(card.geom.rotation.x, card.geom.rotation.y, card.geom.rotation.z);
-                }
-                
-              }
-            }(thisCard, toObj)));
-            
-  
-            var toHandTween = new TWEEN.Tween(thisCard.movementTween.position).to(getCardPosition(cards.length, i), 1000);
-            toHandTween.onUpdate((function(card){
-              return function(value1){
-                //now that cards are parented properly, move them so we can view each card
-                  if(typeof card.geom !== 'undefined'){
+    var thisCard = cards[i];
+    //thisCard = theGame.deck.getCard(thisCard);
+    //cards[i] = thisCard;
 
-                        card.geom.position.x = card.movementTween.position.x;
-                  }
-               }
-            }(thisCard)));
-           
-    
-            var height = {y: -110};
-            var rotation = {x:-Math.PI/8};
-            //if(!toggle){
-               // rotation.x = Math.PI/2;
-               // height.y = tableOffset.y; 
-           // }
-  
-            var changeHeightTween = new TWEEN.Tween(thisCard.movementTween.position).to(height, 1000);  
-            changeHeightTween.onUpdate((function(card){
-              return function(value1){
-                //now that cards are in the correct position, raise them so we can see the cards
-                if(typeof card.geom !== 'undefined'){
-                    card.geom.position.copy(card.movementTween.position);
-                }else{
-                    console.log('no geom!');
-                }
-              }
-            }(thisCard))); 
-            
-            
-  
-            var makeVisibleTween = new TWEEN.Tween(thisCard.movementTween.rotation).to(rotation, 1000);
-            makeVisibleTween.onUpdate((function(card){
-              return function(t){
-                  //also rotate the cards
-                  if(typeof card.geom !== 'undefined'){
-                    card.geom.rotation.setFromVector3(card.movementTween.rotation);
-                  }
-              }
-            }(thisCard)));
+    thisCard.movementTween.rotation.copy(thisCard.geom.rotation);
+    thisCard.movementTween.position.copy(thisCard.geom.position);
 
-          
-            
-            toRotationTween.chain(toPlayerTween);
-            toPlayerTween.chain(toHandTween, makeVisibleTween, changeHeightTween);
-            toRotationTween.start(); 
+    var toRotationTween = new TWEEN.Tween(thisCard.movementTween.rotation).to({z: -toObj.rotation.y}, 1000);
+    toRotationTween.onUpdate((function(card) {
+        return function(value1) {
+            //rotate the cards to face the players
+            if(typeof card.geom !== 'undefined'){
+                card.geom.rotation.setFromVector3(card.movementTween.rotation);
+            }
+        };
+    }(thisCard)));
+
+
+    var toPlayerTween = new TWEEN.Tween(thisCard.movementTween.position).to({x:toObj.position.x, z: toObj.position.z}, 2000);
+    toPlayerTween.onUpdate((function(card) {
+        return function(value1) {
+            //move the cards to the player
+            if(typeof card.geom !== 'undefined'){
+                card.geom.position.copy(card.movementTween.position);
+            }
+        };
+    }(thisCard)));
+
+    toPlayerTween.onComplete((function(card, hand){
+        return function(value1) {
+            //add the cards to the 'hand' object
+            if(typeof card.geom !== 'undefined'){
+
+                THREE.SceneUtils.attach(card.geom, sim.scene, hand);
+                hand.updateMatrixWorld();
+
+                //our position has updated, so lets update the movementTween
+                card.movementTween.position.copy(card.geom.position);
+                card.movementTween.rotation.set(card.geom.rotation.x, card.geom.rotation.y, card.geom.rotation.z);
+            }
+        };
+    }(thisCard, toObj)));
+
+    var toHandTween = new TWEEN.Tween(thisCard.movementTween.position).to(getCardPosition(cards.length, i), 1000);
+    toHandTween.onUpdate((function(card) {
+        return function(value1) {
+            //now that cards are parented properly, move them so we can view each card
+            if (typeof card.geom !== 'undefined') {
+                card.geom.position.x = card.movementTween.position.x;
+            }
+        };
+    }(thisCard)));
+
+    var height = {y: -110};
+    var rotation = {x:-Math.PI/8};
+    //if(!toggle){
+    // rotation.x = Math.PI/2;
+    // height.y = tableOffset.y;
+    // }
+
+    var changeHeightTween = new TWEEN.Tween(thisCard.movementTween.position).to(height, 1000);
+    changeHeightTween.onUpdate((function(card) {
+        return function(value1) {
+            //now that cards are in the correct position, raise them so we can see the cards
+            if(typeof card.geom !== 'undefined'){
+                card.geom.position.copy(card.movementTween.position);
+            }else{
+                console.log('no geom!');
+            }
+        };
+    }(thisCard)));
+
+    var makeVisibleTween = new TWEEN.Tween(thisCard.movementTween.rotation).to(rotation, 1000);
+    makeVisibleTween.onUpdate((function(card) {
+        return function(t) {
+            //also rotate the cards
+            if(typeof card.geom !== 'undefined'){
+                card.geom.rotation.setFromVector3(card.movementTween.rotation);
+            }
+        };
+    }(thisCard)));
+
+    toRotationTween.chain(toPlayerTween);
+    toPlayerTween.chain(toHandTween, makeVisibleTween, changeHeightTween);
+    toRotationTween.start();
 }
-
 
 var theGame;
 
 function updatePlayers(time){
-  sim.renderer.render(sim.scene, sim.camera);
-  
-  for(var i=0; i<theGame.players.length; i++){
-    theGame.players[i].renderVisuals(time);
-  }
-  if(typeof theGame.betCube !== "undefined" && theGame.betCube.visible){
-    theGame.betCube.rotation.y += 0.005;
-  }    
-  theGame.resetSharedRotation();
-  TWEEN.update();
-  requestAnimationFrame(updatePlayers);
+    sim.renderer.render(sim.scene, sim.camera);
+
+    for (var i = 0; i < theGame.players.length; i++) {
+        theGame.players[i].renderVisuals(time);
+    }
+    if (typeof theGame.betCube !== "undefined" && theGame.betCube.visible) {
+        theGame.betCube.rotation.y += 0.005;
+    }
+    theGame.resetSharedRotation();
+    TWEEN.update();
+    requestAnimationFrame(updatePlayers);
 }
 
 function main(){
-    
-	theGame.logic = texasHoldEm;
+
+    theGame.logic = texasHoldEm;
     setTimeout(checkForDoneBetting, 1000);
-    
+
     //render first set of visuals
     updatePlayers(0);
-    
+
     document.querySelector("svg .loading").style.display = "none";
     //document.querySelectorAll("svg .credits").style.display = "none";
     [].forEach.call(document.querySelectorAll("svg .credits"), function(text) {
-        document.querySelectorAll("svg .credits")
+        document.querySelectorAll("svg .credits");
         text.style.display = "none";
     });
-  
-   /*
-    var betimage = document.createElement('img');
-    betimage.src = "http://foxgamestudios.com/wp-content/uploads/2016/02/rotatingCubeBetting.png?color=white"; 
-	var betmaterial = new THREE.MeshBasicMaterial({map:new THREE.Texture(betimage)});
-    var betgeometry = new THREE.CubeGeometry(50, 50, 50);
-	var betCube = new THREE.Mesh(betgeometry, betmaterial);
-     
-    var winimage = document.createElement('img');
-    winimage.src = "http://foxgamestudios.com/wp-content/uploads/2016/02/rotatingCubeWinner.png"; 
-    var winmaterial = new THREE.MeshBasicMaterial({map: new THREE.Texture(winimage)});
-    */
+
+    /*
+     var betimage = document.createElement('img');
+     betimage.src = "http://foxgamestudios.com/wp-content/uploads/2016/02/rotatingCubeBetting.png?color=white";
+     var betmaterial = new THREE.MeshBasicMaterial({map:new THREE.Texture(betimage)});
+     var betgeometry = new THREE.CubeGeometry(50, 50, 50);
+     var betCube = new THREE.Mesh(betgeometry, betmaterial);
+
+     var winimage = document.createElement('img');
+     winimage.src = "http://foxgamestudios.com/wp-content/uploads/2016/02/rotatingCubeWinner.png";
+     var winmaterial = new THREE.MeshBasicMaterial({map: new THREE.Texture(winimage)});
+     */
     theGame.winCube = new THREE.Object3D();
     theGame.betCube = new THREE.Object3D();
     var winCube = theGame.models.WinnerText.clone();// new THREE.Mesh(betgeometry, winmaterial);
@@ -817,16 +764,16 @@ function main(){
     betArrow.scale.set(50, 100, 50);
     betCube.scale.set(100, 100, 100);
     winCube.scale.set(100, 100, 100);
-    
+
     betArrow.position.y -= 20;
     winArrow.position.y -= 20;
-    
+
     theGame.winCube.add(winCube);
     theGame.winCube.add(winArrow);
-    
+
     theGame.betCube.add(betCube);
     theGame.betCube.add(betArrow);
-    
+
     theGame.winCube.addBehaviors(alt.Spin({speed: 0.0000001}));
     theGame.betCube.addBehaviors(alt.Spin({speed: 0.0000001}));
     //theGame.betCube.visible = false;
@@ -834,7 +781,7 @@ function main(){
     toggleVisible(theGame.betCube, false);
     toggleVisible(theGame.winCube, false);
     theGame.cardsToDeck = cardsToDeck;
-    
+
     theGame.potHolder = new THREE.Object3D();
     theGame.potHolder.name = "potholder";
     //potHolder.add(theGame.potHolder);
@@ -842,34 +789,33 @@ function main(){
     theGame.potHolder.position.y+= 5;
     theGame.potHolder.position.x-= 75;
     sim.scene.add(theGame.potHolder);
-    sim.scene.add(theGame.winCube); 
+    sim.scene.add(theGame.winCube);
     sim.scene.add(theGame.betCube);
-  
-    sim.renderer.render(sim.scene, sim.camera); 
-  
-  
-    theGame.resetDealers(); 
+
+    sim.renderer.render(sim.scene, sim.camera);
+
+
+    theGame.resetDealers();
 }
 
-function cardsToDeck(){ 
-  var cards = [];
-  for(var i=0; i<this.bettingOrder.length; i++){
-    var player = this.dealingOrder[this.bettingOrder[i]];
-    for(var j=0; j<player.cards.length; j++){
-        cards.push(player.cards[j]);
+function cardsToDeck() {
+    var cards = [];
+    for (var i = 0; i < this.bettingOrder.length; i++) {
+        var player = this.dealingOrder[this.bettingOrder[i]];
+        for(var j = 0; j < player.cards.length; j++) {
+            cards.push(player.cards[j]);
+        }
+        player.cards = [];
     }
-    player.cards = [];  
-  }
-  
-  cards = cards.concat(this.sharedCards.cards);
-  
-  //we have one of every card, lets bring them back to the deck
-  for(var i=0; i<cards.length; i++){ 
-    var card = cards[i];
-    cardToDeck(card);
-  }
-  this.sharedCards = {cards: []}; 
-   
+
+    cards = cards.concat(this.sharedCards.cards);
+
+    //we have one of every card, lets bring them back to the deck
+    for(var i=0; i<cards.length; i++){
+        var card = cards[i];
+        cardToDeck(card);
+    }
+    this.sharedCards = {cards: []};
 }
 
 function cardToDeck(card){
@@ -877,77 +823,75 @@ function cardToDeck(card){
     if(typeof card.geom !== 'undefined'){
         var geom = card.geom;
         delete card.geom;
-        movementTween.position.copy(geom.position); 
+        movementTween.position.copy(geom.position);
         movementTween.rotation.copy(geom.rotation);
-                var toTable = new TWEEN.Tween(movementTween.position).to({y:tableOffset.y}, 200);
-                var posToDeck = new TWEEN.Tween(movementTween.position).to(tableOffset, 1000);
-                posToDeck.onUpdate((function(geom, movementTween){
-                  return function(t){
-                      geom.position.copy(movementTween.position);
-                  } 
-                }(geom, movementTween)));
-               setTimeout(function(){
-                      if(geom.parent.type === "Object3D"){ 
-                        THREE.SceneUtils.detach(geom, geom.parent, sim.scene);
-                        geom.updateMatrixWorld();
-                      }
-                      geom.parent.remove(geom); 
-                
-                }, 1200);
-                var rotToDeck = new TWEEN.Tween(movementTween.rotation).to({x:Math.PI/2, y:0, z:0}, 500);
-                rotToDeck.onUpdate((function(geom, movementTween){
-                  return function(t){
-                      if(typeof geom !== 'undefined'){
-                        geom.rotation.setFromVector3(movementTween.rotation);
-                      }
-                  } 
-                }(geom, movementTween)));
+        var toTable = new TWEEN.Tween(movementTween.position).to({y:tableOffset.y}, 200);
+        var posToDeck = new TWEEN.Tween(movementTween.position).to(tableOffset, 1000);
+        posToDeck.onUpdate((function(geom, movementTween) {
+            return function(t) {
+                geom.position.copy(movementTween.position);
+            };
+        }(geom, movementTween)));
+        setTimeout(function() {
+            if (geom.parent.type === "Object3D") {
+                THREE.SceneUtils.detach(geom, geom.parent, sim.scene);
+                geom.updateMatrixWorld();
+            }
+            geom.parent.remove(geom);
+
+        }, 1200);
+        var rotToDeck = new TWEEN.Tween(movementTween.rotation).to({x:Math.PI/2, y:0, z:0}, 500);
+        rotToDeck.onUpdate((function(geom, movementTween) {
+            return function(t) {
+                if(typeof geom !== 'undefined'){
+                    geom.rotation.setFromVector3(movementTween.rotation);
+                }
+            };
+        }(geom, movementTween)));
         toTable.chain(posToDeck);
         toTable.start();
-        rotToDeck.start(); 
+        rotToDeck.start();
     }else{
         //debugger;
     }
 }
 
 
-function numActivePlayers(){
-  var numActive = 0;
-  for(var i=0; i<theGame.players.length; i++){ 
-    if(theGame.players[i].state > -1){
-      numActive++;
+function numActivePlayers() {
+    var numActive = 0;
+    for(var i=0; i<theGame.players.length; i++){
+        if(theGame.players[i].state > -1){
+            numActive++;
+        }
     }
-  }
-  return numActive;
+    return numActive;
 }
 
-function movePlayerButton(mesh, newPlayerIndex){
-  /*switch(newPlayerIndex){
-    case 0: 
-      mesh.position.set(0, mesh.position.y, 225);
-      mesh.rotation.y = 0;
-      break;
-    case 1:
-       mesh.position.set(0, mesh.position.y, -225);
-       mesh.rotation.y = Math.PI;
-      break;
-    case 2:
-       mesh.position.set(225, mesh.position.y, 0);
-       mesh.rotation.y = Math.PI/2;
-      break;
-    case 3:
-       mesh.position.set(-225, mesh.position.y, 0);
-       mesh.rotation.y = -Math.PI/2;
-      break;
-    default:
-      console.log("Too many players!");
-      mesh.visible = false;
-      break;
-  }*/
-  var position = theGame.players[newPlayerIndex].hand.position;
-  var rotation = theGame.players[newPlayerIndex].hand.rotation;
-  mesh.position.copy(position);
-  mesh.rotation.copy(rotation);
-    
-    
+function movePlayerButton(mesh, newPlayerIndex) {
+    /*switch(newPlayerIndex){
+     case 0:
+     mesh.position.set(0, mesh.position.y, 225);
+     mesh.rotation.y = 0;
+     break;
+     case 1:
+     mesh.position.set(0, mesh.position.y, -225);
+     mesh.rotation.y = Math.PI;
+     break;
+     case 2:
+     mesh.position.set(225, mesh.position.y, 0);
+     mesh.rotation.y = Math.PI/2;
+     break;
+     case 3:
+     mesh.position.set(-225, mesh.position.y, 0);
+     mesh.rotation.y = -Math.PI/2;
+     break;
+     default:
+     console.log("Too many players!");
+     mesh.visible = false;
+     break;
+     }*/
+    var position = theGame.players[newPlayerIndex].hand.position;
+    var rotation = theGame.players[newPlayerIndex].hand.rotation;
+    mesh.position.copy(position);
+    mesh.rotation.copy(rotation);
 }
