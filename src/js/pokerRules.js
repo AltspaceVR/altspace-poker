@@ -19,7 +19,7 @@ function createCardGeom(theCard, doubleSided, visible) {
         material = new THREE.MeshBasicMaterial({color:'#000000'});
         material.side = THREE.DoubleSide;
     } else {
-        cardfront.scale.setX(-cardfront.scale.x)
+        cardfront.scale.setX(-cardfront.scale.x);
         material = new THREE.MeshBasicMaterial({color:'#FFFFFF', map: new THREE.Texture(theCard.image)});
         material.side = THREE.BackSide;
     }
@@ -49,15 +49,6 @@ function createCardGeom(theCard, doubleSided, visible) {
     //sim.scene.add(card);
     theCard.geom = card;
     return card;
-}
-
-//return a list of subvals
-//per hand, so we can rank them
-
-function pot(startingAmount) {
-    this.amountToContribute = 0;
-    this.locked = false;
-    this.amount = startingAmount || 0;
 }
 
 var betStep = function(game) {

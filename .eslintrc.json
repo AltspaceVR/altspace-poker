@@ -19,6 +19,7 @@
         "Game": true,
         "Ruleset": true,
         "Player": true,
+        "Pot": true,
         "SoundEngine": true,
         "BufferLoader": true
     }

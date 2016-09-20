@@ -20,7 +20,7 @@ function Game() {
     };
     this.currentBet = 0;
     this.minRaise = 0;
-    this.bettingPots = [new pot()];
+    this.bettingPots = [new Pot()];
     this.roundRecord = [];
 
     this.nudged = false;
@@ -34,7 +34,7 @@ function Game() {
 Game.prototype.newPot = function() {
     this.bettingPots[0].locked = true;
     //this.bettingPots.push(this.bettingPot);
-    var newpot = new pot();
+    var newpot = new Pot();
     this.bettingPots.unshift(newpot);
 };
 
@@ -221,7 +221,7 @@ Game.prototype.nextHand = function() {
     //into one new pot
 
     this.bettingPots = [];
-    this.bettingPots.push(new pot());
+    this.bettingPots.push(new Pot());
     this.deck.shuffle();
 
     if (Date.now() > this.timeBlindStarted + this.timeBetweenBlinds) {

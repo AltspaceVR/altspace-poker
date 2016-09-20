@@ -191,7 +191,7 @@ function processUpdates(newUpdates) {
                 }
                 theGame.resetDealers();
                 theGame.bettingPots = [];
-                theGame.bettingPots.push(new pot());
+                theGame.bettingPots.push(new Pot());
                 //theGame.step = 1;
                 theGame.dealer = data.dealer;
                 for (var i = 0; i < theGame.players.length; i++) {
