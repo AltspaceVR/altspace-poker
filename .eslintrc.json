@@ -13,6 +13,11 @@
         "THREE": false,
         "TWEEN": false,
         "Promise": false,
-        "Utils": true
+        "Utils": true,
+        "Card": true,
+        "Deck": true,
+        "Game": true,
+        "Ruleset": true,
+        "Player": true
     }
 }

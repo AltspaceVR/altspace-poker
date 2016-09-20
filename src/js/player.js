@@ -1,4 +1,4 @@
-function player(whichPlayer) {
+function Player(whichPlayer) {
     this.cards = [];
     this.spot = whichPlayer;
     this.state = -2;
@@ -24,15 +24,15 @@ function player(whichPlayer) {
     this.raised = false;
 }
 
-player.prototype.myCardsFriendly = function() {
+Player.prototype.myCardsFriendly = function() {
     var retArray = [];
-    for(var i=0; i<this.cards.length; i++){
-        retArray.push(numArray[this.cards[i].number]+" of "+this.cards[i].suit);
+    for (var i = 0; i < this.cards.length; i++) {
+        retArray.push(Card.numArray[this.cards[i].number]+" of "+this.cards[i].suit);
     }
     return retArray;
 };
 
-player.prototype.renderVisuals = function(timeSince) {
+Player.prototype.renderVisuals = function(timeSince) {
     if (this.prevState !== this.state) {
         console.group('player'+this.spot+' moved from ', this.prevState, this.state);
 
@@ -210,7 +210,7 @@ player.prototype.renderVisuals = function(timeSince) {
 };
 
 
-player.prototype.chipColors = {
+Player.prototype.chipColors = {
     "white": 1,
     "red": 5,
     "blue": 10,
@@ -228,7 +228,7 @@ player.prototype.chipColors = {
 
  */
 
-player.prototype.renderChips = function() {
+Player.prototype.renderChips = function() {
     renderChips(this.chipStack, this.money);
 
     //Update the canvas with the new amount
@@ -237,7 +237,7 @@ player.prototype.renderChips = function() {
     this.chipStack.position.copy(tableOffset);
 };
 
-player.prototype.moveChipsFrom = function(amount, where) {
+Player.prototype.moveChipsFrom = function(amount, where) {
     //where is a Vector3
     var trackingVector = new THREE.Vector3();
     trackingVector.setFromMatrixPosition(theGame.potHolder.matrixWorld);
@@ -269,7 +269,7 @@ player.prototype.moveChipsFrom = function(amount, where) {
 };
 
 //disabling chip animation for now until it's consistent
-player.prototype.moveChipsTo = function(amount, where) {
+Player.prototype.moveChipsTo = function(amount, where) {
     //where is a Vector3
     var trackingVector = new THREE.Vector3();
     trackingVector.setFromMatrixPosition(this.chipStack.matrixWorld);
@@ -300,7 +300,7 @@ player.prototype.moveChipsTo = function(amount, where) {
     toHolderTween.start();
 };
 
-player.prototype.bet = function(amount) {
+Player.prototype.bet = function(amount) {
 
     //we may need to split the pot here
 
@@ -321,7 +321,7 @@ player.prototype.bet = function(amount) {
     }
 };
 
-player.prototype.contributeToPot = function(amount) {
+Player.prototype.contributeToPot = function(amount) {
     var alreadyBet = this.totalBet;
     var potSoFar = 0;
     var amountToSatisfy;
@@ -390,7 +390,7 @@ player.prototype.contributeToPot = function(amount) {
     }
 };
 
-player.prototype.betUpdate = function(amount) {
+Player.prototype.betUpdate = function(amount) {
     /* var maxAmount = 0;
      for(var i=0; i<theGame.players.length; i++){
      var player = theGame.players[i];
@@ -413,7 +413,7 @@ player.prototype.betUpdate = function(amount) {
     theGame.nextBet();
 };
 
-player.prototype.fold = function() {
+Player.prototype.fold = function() {
     //theGame.bettingOrder.splice(theGame.better, 1);
 
     for (var i = 0; i < this.cards.length; i++) {
@@ -455,7 +455,7 @@ player.prototype.fold = function() {
     }
 };
 
-player.prototype.foldUpdate = function() {
+Player.prototype.foldUpdate = function() {
     sendUpdate({i:theGame.players.indexOf(this)}, "playerFold");
     this.fold();
 };

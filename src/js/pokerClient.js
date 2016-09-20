@@ -50,7 +50,7 @@ var globalPlayerIndex = -1;
 var globalPlayerHead;
 
 //function makeGame(){
-//theGame = new game();
+//theGame = new Game();
 //syncingObject = new THREE.Object3D();
 // syncingObject.addBehaviors(alt.Object3DSync({syncData: true}));
 // syncingObject.userData.syncData = theGame;//{that:"testThing"};  //theGame;//.players[0];
@@ -152,10 +152,10 @@ var basicMat = new THREE.MeshBasicMaterial({color: "#FFFFFF"});
 
 function ready(firstInstance) {
 
-    theGame = new game();
-    theGame.deck = new deck();
+    theGame = new Game();
+    theGame.deck = new Deck();
     for(var i=0; i<6; i++){
-        theGame.players.push(new player(i));
+        theGame.players.push(new Player(i));
     }
 
     setupSounds();
@@ -169,7 +169,7 @@ function ready(firstInstance) {
 
         theGame.deck.shuffle();
 
-        theGame.roundRecord = [{title: "startedLevel", timestamp: Date.now()}]
+        theGame.roundRecord = [{title: "startedLevel", timestamp: Date.now()}];
 
         instanceBase.child('game').set({title: "Initial data dump", data: theGame.roundRecord});
 
