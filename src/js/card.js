@@ -101,31 +101,23 @@ Card.isFlush = function(cards) {
 };
 
 Card.isStraight = function(cards) {
-    var theseCards = cards.slice(0);
-    theseCards.sort(function(card1, card2) {
-        if (card1.number === card2.number) {
-            return 0;
-        } else {
-            return card1.number > card2.number;
+    var possibilities = [
+        _.sortBy(cards, Card.comparingAceLow),
+        _.sortBy(cards, Card.comparingAceHigh)
+    ];
+
+    return _.some(possibilities, function(cards) {
+        for (var i = 0; i < cards.length - 1; i++) {
+            var first = cards[i].number, second = cards[i + 1].number;
+            if (first == 12 && second == 0) {
+                continue;
+            }
+            if (first + 1 !== second) {
+                return false;
+            }
         }
+        return true;
     });
-
-    console.log(theseCards);
-    var numTries = cards.length - 5;
-    //we have this many attempts to find a straight
-
-    for (var i=0; i<numTries; i++) {
-        for (var j=0; j<5; j++) {
-            if (theseCards[i+j].number !== (theseCards[i+j].number+1)) {
-                break;
-            }
-            if (j===4) {
-                //if we've gotten this far, we're done!
-                return theseCards.slice(i, i+5);
-            }
-        }
-    }
-    return false;
 };
 
 Card.sameCards = function(setOne, setTwo) {
@@ -145,6 +137,9 @@ Card.sameCards = function(setOne, setTwo) {
 Card.max = function(cards) {
     return Math.max.apply(null, cards.map(function(val){return val.number;}));
 };
+
+Card.comparingAceLow = function(card) { return card.number == 12 ? -1 : card.number; };
+Card.comparingAceHigh = function(card) { return card.number; };
 
 Card.sort = function(cardset) {
     var cards = cardset.slice(0);
