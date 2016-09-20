@@ -1041,7 +1041,7 @@ var texasHoldEm = {
                         var isTie = false;
 
                         for (var j = 0; j < highestHand[judgeValue.value].players.length; j++) {
-                            if (arraysEqual(judgeValue.subValue, highestHand[judgeValue.value].players[j].subVals)) {
+                            if (Utils.arraysEqual(judgeValue.subValue, highestHand[judgeValue.value].players[j].subVals)) {
                                 isTie = true;
                                 console.log('its a tie!');
                                 highestHand[judgeValue.value].players[j].players.push(getSafePlayer(candidateOrder[i]));
@@ -1175,18 +1175,4 @@ function toggleVisible(object, visible) {
     for (var i = 0, max = object.children.length; i < max; i++) {
         toggleVisible(object.children[i], visible);
     }
-}
-
-function arraysEqual(a, b) {
-    if (a === b) return true;
-    if (a == null || b == null) return false;
-    if (a.length != b.length) return false;
-
-    // If you don't care about the order of the elements inside
-    // the array, you should sort both arrays here.
-
-    for (var i = 0; i < a.length; ++i) {
-        if (a[i] !== b[i]) return false;
-    }
-    return true;
 }

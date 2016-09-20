@@ -1,4 +1,6 @@
-function arraysEqual(a, b) {
+Utils = Utils || {};
+
+Utils.arraysEqual = function(a, b) {
     if (a === b) return true;
     if (a == null || b == null) return false;
     if (a.length != b.length) return false;
@@ -10,9 +12,9 @@ function arraysEqual(a, b) {
         if (a[i] !== b[i]) return false;
     }
     return true;
-}
+};
 
-function isCyclic (obj) {
+Utils.isCyclic = function(obj) {
     var seenObjects = [];
 
     function detect (obj) {
@@ -32,38 +34,34 @@ function isCyclic (obj) {
     }
 
     return detect(obj);
-}
+};
 
 /**
  * Simple is object check.
  * @param item
  * @returns {boolean}
  */
-function isObject(item) {
+Utils.isObject = function(item) {
     return (item && typeof item === 'object' && item !== null);
-}
+};
 
 /**
  * Deep merge two objects.
  * @param target
  * @param source
  */
-function mergeDeep(target, source) {
-    if (isObject(target) && isObject(source)) {
+Utils.mergeDeep = function(target, source) {
+    if (Utils.isObject(target) && Utils.isObject(source)) {
         Object.keys(source).forEach(function(key){
-            if (isObject(source[key])) {
+            if (Utils.isObject(source[key])) {
                 if (!target[key]){
-                    var newObj = {};
-                    newObj[key] = {};
-                    Object.assign(target, newObj);
+                    Object.assign(target, {key: {}});
                 }
-                mergeDeep(target[key], source[key]);
+                Utils.mergeDeep(target[key], source[key]);
             } else {
-                var newObj = {};
-                newObj[key] = source[key];
-                Object.assign(target, newObj);
+                Object.assign(target, {key: source[key]});
             }
         });
     }
     return target;
-}
+};

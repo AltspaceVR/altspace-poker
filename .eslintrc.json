@@ -11,6 +11,7 @@
         "altspace": false,
         "THREE": false,
         "TWEEN": false,
-        "Promise": false
+        "Promise": false,
+        "Utils": true
     }
 }
