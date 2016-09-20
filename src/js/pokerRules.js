@@ -45,6 +45,7 @@ function _checkForDoneBetting() {
              theGame.step++;
              theGame.runStep();
              }*/
+            toggleVisible(theGame.betCube, false);
             if (globalUserId === theGame.dealingOrder[theGame.dealer].userId && theGame.nudged === false) {
                 //show the step change UI
                 Utils.toggleVisible(theGame.dealingOrder[theGame.dealer].dealerChip.mesh, true);
@@ -300,9 +301,9 @@ var texasHoldEm = {
 
                  }*/
 
-                game.step = 10;
+                //game.step = 10;
 
-                game.runStep(); //kick out players without money, transfer control
+                //game.runStep(); //kick out players without money, transfer control
             }
         },
         { //10
@@ -312,38 +313,36 @@ var texasHoldEm = {
             },
             exec: function(game) {
 
-                setTimeout(function() {
-                    var activePlayers = 0;
-                    var activeIndex = -1;
-                    game.resetCards();
+                var activePlayers = 0;
+                var activeIndex = -1;
+                game.resetCards();
 
-                    for (var i = 0; i < game.dealingOrder.length; i++) {
-                        //go through every player, if they have no money, they need to leave
-                        //broke-ass punks
+                for (var i = 0; i < game.dealingOrder.length; i++) {
+                    //go through every player, if they have no money, they need to leave
+                    //broke-ass punks
 
-                        if (game.dealingOrder[i].money === 0 && game.dealingOrder[i].state !== -1) {
-                            game.dealingOrder[i].state = -3;
-                            if (i === game.dealer) {
-                                game.dealer--;  //if this person folds out, pretend like the person right before them was the dealer when we rotate     NOTE: this did not work
-                            }
+                    if (game.dealingOrder[i].money === 0 && game.dealingOrder[i].state !== -1) {
+                        game.dealingOrder[i].state = -3;
+                        if (i === game.dealer) {
+                            game.dealer--;  //if this person folds out, pretend like the person right before them was the dealer when we rotate     NOTE: this did not work
                         }
                     }
-                    for (var i = 0; i < game.players.length; i++) {
-                        if (game.players[i].state > 0) {
-                            activePlayers++;
-                            activeIndex = i;
-                        }
-                        game.players[i].totalBet = 0;
-                        game.players[i].betThisRound = 0;
+                }
+                for (var i = 0; i < game.players.length; i++) {
+                    if (game.players[i].state > 0) {
+                        activePlayers++;
+                        activeIndex = i;
                     }
-                    game.rotateDealers();
+                    game.players[i].totalBet = 0;
+                    game.players[i].betThisRound = 0;
+                }
+                game.rotateDealers();
 
-                    if (activePlayers > 1) {
-                        game.nextHand();
-                    } else {
-                        game.winGame(activeIndex);
-                    }
-                }, 10000);
+                if (activePlayers > 1) {
+                    game.nextHand();
+                } else {
+                    game.winGame(activeIndex);
+                }
 
                 //cutoffTime = Date.now();
                 //sendUpdate({transferControl: game.dealingOrder[game.dealer].spot, endstatePlayers: playerStates}, "transferControl", {thenUpdate: true});

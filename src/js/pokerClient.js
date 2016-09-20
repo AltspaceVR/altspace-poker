@@ -216,7 +216,7 @@ function ready(firstInstance) {
 
             }
 
-            var promises = [altspace.getUser(), altspace.getThreeJSTrackingSkeleton()]
+            var promises = [altspace.getUser(), altspace.getThreeJSTrackingSkeleton()];
             Promise.all(promises).then(function(arr){
                 var result = arr[0];
                 globalUserId = result.userId;

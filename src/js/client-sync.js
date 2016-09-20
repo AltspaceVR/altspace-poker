@@ -432,7 +432,7 @@ function processUpdates(newUpdates) {
                 }
 
                 var sendingMessages = [];
-                var winState = 0;     //0 is defeat, 1 is defeat at showdown, 2 is victory
+                var didWin = 0;     //0 is defeat, 1 is defeat at showdown, 2 is victory
                 for (var i = 0; i < playerWins.length; i++) {
 
                     //go through the rest of the playerWins array
@@ -524,6 +524,22 @@ function processUpdates(newUpdates) {
                 theGame.step = 9;
                 displayMessage(sendingMessages);
                 //theGame.resetCards();
+                if(globalUserId === theGame.dealingOrder[theGame.dealer].userId){
+                    //show the step change UI
+                    Utils.toggleVisible(theGame.dealingOrder[theGame.dealer].dealerChip.mesh, true);
+                    window.setTimeout(function(){
+                        displayMessageSingle({
+                            timeToDisappear:3000,
+                            scale:new THREE.Vector3(0.4, 0.4, 0.4),
+                            messageType:1,
+                            message:"Click to start next hand!",
+                            messagePos:theGame.dealingOrder[theGame.dealer].dealerUI.mesh.getWorldPosition(),
+                            arrowSide: "down",
+                            moveDirection: new THREE.Vector3(0, 50, 0)
+                        });
+                    }, 10);
+
+                }
                 break;
             case "dealSharedCards":
                 Array.prototype.push.apply(theGame.sharedCards.cards, data.sharedCards);
