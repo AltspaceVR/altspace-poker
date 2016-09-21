@@ -491,50 +491,41 @@ function giveCard(cards, toObj, i) {
     thisCard.movementTween.position.copy(thisCard.geom.position);
 
     var toRotationTween = new TWEEN.Tween(thisCard.movementTween.rotation).to({z: -toObj.rotation.y}, 1000);
-    toRotationTween.onUpdate((function(card) {
-        return function(value1) {
-            //rotate the cards to face the players
-            if(typeof card.geom !== 'undefined'){
-                card.geom.rotation.setFromVector3(card.movementTween.rotation);
-            }
-        };
-    }(thisCard)));
-
+    toRotationTween.onUpdate(function() {
+        //rotate the cards to face the players
+        if (typeof thisCard.geom !== 'undefined') {
+            thisCard.geom.rotation.setFromVector3(thisCard.movementTween.rotation);
+        }
+    });
 
     var toPlayerTween = new TWEEN.Tween(thisCard.movementTween.position).to({x:toObj.position.x, z: toObj.position.z}, 2000);
-    toPlayerTween.onUpdate((function(card) {
-        return function(value1) {
-            //move the cards to the player
-            if(typeof card.geom !== 'undefined'){
-                card.geom.position.copy(card.movementTween.position);
-            }
-        };
-    }(thisCard)));
+    toPlayerTween.onUpdate(function() {
+        //move the cards to the player
+        if (typeof thisCard.geom !== 'undefined') {
+            thisCard.geom.position.copy(thisCard.movementTween.position);
+        }
+    });
 
-    toPlayerTween.onComplete((function(card, hand){
-        return function(value1) {
-            //add the cards to the 'hand' object
-            if(typeof card.geom !== 'undefined'){
+    toPlayerTween.onComplete(function() {
+        //add the cards to the 'hand' object
+        if (typeof thisCard.geom !== 'undefined') {
 
-                THREE.SceneUtils.attach(card.geom, sim.scene, hand);
-                hand.updateMatrixWorld();
+            THREE.SceneUtils.attach(thisCard.geom, sim.scene, toObj);
+            toObj.updateMatrixWorld();
 
-                //our position has updated, so lets update the movementTween
-                card.movementTween.position.copy(card.geom.position);
-                card.movementTween.rotation.set(card.geom.rotation.x, card.geom.rotation.y, card.geom.rotation.z);
-            }
-        };
-    }(thisCard, toObj)));
+            //our position has updated, so lets update the movementTween
+            thisCard.movementTween.position.copy(thisCard.geom.position);
+            thisCard.movementTween.rotation.set(thisCard.geom.rotation.x, thisCard.geom.rotation.y, thisCard.geom.rotation.z);
+        }
+    });
 
     var toHandTween = new TWEEN.Tween(thisCard.movementTween.position).to(getCardPosition(cards.length, i), 1000);
-    toHandTween.onUpdate((function(card) {
-        return function(value1) {
-            //now that cards are parented properly, move them so we can view each card
-            if (typeof card.geom !== 'undefined') {
-                card.geom.position.x = card.movementTween.position.x;
-            }
-        };
-    }(thisCard)));
+    toHandTween.onUpdate(function() {
+        //now that cards are parented properly, move them so we can view each card
+        if (typeof thisCard.geom !== 'undefined') {
+            thisCard.geom.position.x = thisCard.movementTween.position.x;
+        }
+    });
 
     var height = {y: -110};
     var rotation = {x:-Math.PI/8};
@@ -544,26 +535,22 @@ function giveCard(cards, toObj, i) {
     // }
 
     var changeHeightTween = new TWEEN.Tween(thisCard.movementTween.position).to(height, 1000);
-    changeHeightTween.onUpdate((function(card) {
-        return function(value1) {
-            //now that cards are in the correct position, raise them so we can see the cards
-            if(typeof card.geom !== 'undefined'){
-                card.geom.position.copy(card.movementTween.position);
-            }else{
-                console.log('no geom!');
-            }
-        };
-    }(thisCard)));
+    changeHeightTween.onUpdate(function() {
+        //now that cards are in the correct position, raise them so we can see the cards
+        if (typeof thisCard.geom !== 'undefined') {
+            thisCard.geom.position.copy(thisCard.movementTween.position);
+        } else {
+            console.log('no geom!');
+        }
+    });
 
     var makeVisibleTween = new TWEEN.Tween(thisCard.movementTween.rotation).to(rotation, 1000);
-    makeVisibleTween.onUpdate((function(card) {
-        return function(t) {
-            //also rotate the cards
-            if(typeof card.geom !== 'undefined'){
-                card.geom.rotation.setFromVector3(card.movementTween.rotation);
-            }
-        };
-    }(thisCard)));
+    makeVisibleTween.onUpdate(function() {
+        //also rotate the cards
+        if (typeof thisCard.geom !== 'undefined') {
+            thisCard.geom.rotation.setFromVector3(thisCard.movementTween.rotation);
+        }
+    });
 
     toRotationTween.chain(toPlayerTween);
     toPlayerTween.chain(toHandTween, makeVisibleTween, changeHeightTween);
