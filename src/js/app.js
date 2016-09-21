@@ -1,11 +1,10 @@
-(function(){var a = window.altspace; (function insert(ss, t){for(var i in ss) {for (var j in ss[i]) {t[j] = ss[i][j];}};})([a, a.utilities,a.utilities.behaviors, a.utilities.shims], window.alt = {});})();
+(function(){var a = window.altspace; (function insert(ss, t){for(var i in ss) {for (var j in ss[i]) {t[j] = ss[i][j];}}})([a, a.utilities,a.utilities.behaviors, a.utilities.shims], window.alt = {});})();
 
 // Setup
 
 var sim = altspace.utilities.Simulation({
     auto: false
 });
-var inCodePen = altspace.utilities.codePen.inCodePen;
 var instanceBase;
 var sceneSync;
 
@@ -345,14 +344,12 @@ function toggleCardsBehavior(pl) {
                 player.cards[i].geom.rotation.x = Math.PI/2;
                 player.cards[i].geom.position.y-= cardTemplate.height/2;
                 player.cards[i].geom.updateMatrix();
-
             }
         } else {
             for (i = 0; i < player.cards.length; i++) {
                 player.cards[i].geom.rotation.x = 0;
                 player.cards[i].geom.position.y+= cardTemplate.height/2;
                 player.cards[i].geom.updateMatrix();
-
             }
         }
         visible = !visible;

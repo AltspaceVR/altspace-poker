@@ -101,7 +101,7 @@ var texasHoldEm = {
                 for (var i = 0; i < game.players.length; i++) {
                     console.log("players look like this", game.players[i].state > -1, game.players[i].cards.length);
                     game.players[i].cards = [];
-                    if(game.players[i].state > -1 && game.players[i].cards.length === 0){
+                    if (game.players[i].state > -1 && game.players[i].cards.length === 0) {
                         game.deck.dealTo(game.players[i], 2);
                         game.players[i].state = 1;    //player animates their own cards
                         game.sendUpdate({index: i, player: getSafePlayer(game.players[i])}, "dealingCards");
@@ -119,14 +119,12 @@ var texasHoldEm = {
                 Utils.toggleVisible(game.betCube, false);
 
                 for (var i = 0; i < game.sharedCards.cards.length; i++) {
-                    game.sharedCards.cards[i] = game.deck.getCard(game.sharedCards.cards[i], true, true);
+                    var card = game.sharedCards.cards[i] = game.deck.getCard(game.sharedCards.cards[i], true, true);
                     var toSharedTween = new TWEEN.Tween(game.sharedCards.cards[i].movementTween.position).to(getSharedCardPosition(i), 500);
-                    toSharedTween.onUpdate((function(card, movementTween) {
-                        return function(value1) {
-                            //move the cards to the player
-                            card.position.copy(movementTween.position);
-                        };
-                    }(game.sharedCards.cards[i].geom, game.sharedCards.cards[i].movementTween)));
+                    toSharedTween.onUpdate(function() {
+                        //move the cards to the player
+                        card.geom.position.copy(card.movementTween.position);
+                    });
                     toSharedTween.start();
                 }
                 game.step = 4;
@@ -148,14 +146,12 @@ var texasHoldEm = {
         { //5
             execClient: function(game) {
                 Utils.toggleVisible(game.betCube, false);
-                game.sharedCards.cards[3] = game.deck.getCard(game.sharedCards.cards[3], true, true);
+                var card = game.sharedCards.cards[3] = game.deck.getCard(game.sharedCards.cards[3], true, true);
                 var toPlayerTween = new TWEEN.Tween(game.sharedCards.cards[3].movementTween.position).to(getSharedCardPosition(3), 500);
-                toPlayerTween.onUpdate((function(card) {
-                    return function(value1) {
-                        //move the cards to the player
-                        card.geom.position.copy(card.movementTween.position);
-                    };
-                }(game.sharedCards.cards[3])));
+                toPlayerTween.onUpdate(function() {
+                    //move the cards to the player
+                    card.geom.position.copy(card.movementTween.position);
+                });
                 toPlayerTween.start();
                 game.step = 6;
                 game.runClientStep();
@@ -174,16 +170,14 @@ var texasHoldEm = {
         { //7
             execClient: function(game) {
                 Utils.toggleVisible(game.betCube, false);
-                game.sharedCards.cards[4] = game.deck.getCard(game.sharedCards.cards[4], true, true);
+                var card = game.sharedCards.cards[4] = game.deck.getCard(game.sharedCards.cards[4], true, true);
                 var toPlayerTween = new TWEEN.Tween(game.sharedCards.cards[4].movementTween.position).to(getSharedCardPosition(4), 500);
-                toPlayerTween.onUpdate((function(card) {
-                    return function(value1) {
-                        //move the cards to the player
-                        if(card.geom) {
-                            card.geom.position.copy(card.movementTween.position);
-                        }
-                    };
-                }(game.sharedCards.cards[4])));
+                toPlayerTween.onUpdate(function() {
+                    //move the cards to the player
+                    if (card.geom) {
+                        card.geom.position.copy(card.movementTween.position);
+                    }
+                });
                 toPlayerTween.start();
                 game.step = 8;
                 game.runClientStep();

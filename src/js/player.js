@@ -246,19 +246,16 @@ Player.prototype.moveChipsFrom = function(amount, where) {
     theseChips.position.copy(trackingVector);
 
     var toHolderTween = new TWEEN.Tween(trackingVector).to(toVector, 2000);
-    toHolderTween.onUpdate((function(chips) {
-        return function(value1) {
-            chips.position.copy(trackingVector);
-        };
-    }(theseChips)));
+    toHolderTween.onUpdate(function() {
+        theseChips.position.copy(trackingVector);
+    });
 
-    toHolderTween.onComplete((function(movingChips, player) {
-        return function(value1) {
-            //delete the moving chips, update the world chip pot
-            sim.scene.remove(movingChips);
-            player.renderChips();
-        };
-    }(theseChips, this)));
+    var self = this;
+    toHolderTween.onComplete(function() {
+        //delete the moving chips, update the world chip pot
+        sim.scene.remove(theseChips);
+        self.renderChips();
+    });
     toHolderTween.start();
     renderChips(theGame.potHolder, 0);
 };

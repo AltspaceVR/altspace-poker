@@ -350,7 +350,7 @@ function processUpdates(newUpdates) {
 
                 Utils.toggleVisible(theGame.betCube, false);
                 var highestHands = data.hands;
-                var handOrder = Object.keys(highestHands).map(function(val){return parseInt(val)});
+                var handOrder = Object.keys(highestHands).map(function(val){return parseInt(val);});
                 handOrder.sort(function(a, b) { //sorting in reverse order
                     return b-a;
                 });
@@ -413,7 +413,7 @@ function processUpdates(newUpdates) {
                             } else {
                                 qualifiedHands.splice(index, 1);
                                 return false;
-                            };
+                            }
                         });
 
                         for (var j = 0; j < qualifiedPlayers.length; j++) {
