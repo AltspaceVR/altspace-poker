@@ -7,7 +7,7 @@
         "lint": "eslint src/js spec",
         "test": "jasmine",
         "build": "webpack",
-        "server": "webpack-dev-server --progress --colors --hot --host 0.0.0.0"
+        "server": "webpack-dev-server --progress --colors --hot --host 0.0.0.0 --content-base src/"
     },
     "repository": {
         "type": "git",
