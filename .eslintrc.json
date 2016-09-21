@@ -6,7 +6,8 @@
         "no-debugger": 0
     },
     "env": {
-        "browser": true
+        "browser": true,
+        "node": true
     },
     "globals": {
         "_": false,
