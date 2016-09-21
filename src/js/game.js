@@ -229,7 +229,7 @@ Game.prototype.nextHand = function() {
         this.timeBlindStarted = Date.now();
 
         displayMessageSingle({
-            message: "Blinds are now $"+theGame.smallBlind+" and $"+(theGame.smallBlind*2)+"!",
+            message: "Blinds are now $" + this.smallBlind + " and $" + (this.smallBlind * 2) + "!",
             messageType: 3,
             messagePos: new THREE.Vector3(0, -20, 0),
             messageRot: new THREE.Quaternion(),
@@ -240,7 +240,7 @@ Game.prototype.nextHand = function() {
         });
     }
 
-    sendUpdate({authority:globalUserId, deck: getSafeCards({cards: this.deck.cards}), dealer: this.dealer, blind: this.smallBlind, blindStartTime: this.timeBlindStarted},"startHand");
+    this.sendUpdate({authority:globalUserId, deck: getSafeCards({cards: this.deck.cards}), dealer: this.dealer, blind: this.smallBlind, blindStartTime: this.timeBlindStarted},"startHand");
     this.resetSharedRotation();
 
     //this.deck.shuffle();
@@ -251,7 +251,7 @@ Game.prototype.nextHand = function() {
     }
 
     Utils.toggleVisible(this.dealingOrder[this.dealer].dealerChip.mesh, true);
-    Utils.toggleVisible(theGame.dealingOrder[theGame.dealer].dealerUI.mesh, false);
+    Utils.toggleVisible(this.dealingOrder[this.dealer].dealerUI.mesh, false);
 
     //start level
     setTimeout((function(tehGame) {
@@ -260,11 +260,31 @@ Game.prototype.nextHand = function() {
 };
 
 Game.prototype.winGame = function(index) {
-    sendUpdate({index: index, name:theGame.players[index].name},"totalVictory", {thenUpdate:true});
+    this.sendUpdate({index: index, name:this.players[index].name},"totalVictory", {thenUpdate:true});
 };
 
 Game.prototype.resetSharedRotation = function() {
     this.headPosition.copy(globalPlayerHead.position);
     this.headPosition.add(this.headOffset);
     this.sharedCardContainer.lookAt(this.headPosition);
+};
+
+Game.prototype.sendUpdate = function(extraData, title, options) {
+    title = title || "";
+    options = options || {};
+    console.groupCollapsed("Sending update '"+ title + "'");
+    // processUpdates([{title:title, timestamp: Date.now(), data:extraData}])
+    //this.syncInstance.update({title:title, data:this.roundRecord});
+    if (typeof options.thenUpdate === "undefined" || options.thenUpdate === false) {
+        this.roundRecord.push({title: title, timestamp: Date.now(), data: extraData});
+        this.syncInstance.update({title: title, data: this.roundRecord});
+    } else {
+        //should process this update immediately
+        var time = Date.now();
+        var newArr = this.roundRecord.concat([{title: title, timestamp: time, data: extraData}]);
+        this.syncInstance.update({title: title, data: newArr});
+    }
+
+    console.log(extraData);
+    console.groupEnd();
 };

@@ -73,7 +73,7 @@ var texasHoldEm = {
                 //game.dealer = 0;
                 game.deck.shuffle();
                 game.currentAuthority = globalUserId;
-                sendUpdate({authority:globalUserId, dealer: game.dealer, deck: getSafeCards({cards: game.deck.cards}), blind: game.smallBlind, blindStartTime: game.timeBlindStarted}, "startHand");
+                game.sendUpdate({authority:globalUserId, dealer: game.dealer, deck: getSafeCards({cards: game.deck.cards}), blind: game.smallBlind, blindStartTime: game.timeBlindStarted}, "startHand");
                 game.resetSharedRotation();
 
                 for (var i = 0; i < game.players.length; i++) {
@@ -104,10 +104,10 @@ var texasHoldEm = {
                     if(game.players[i].state > -1 && game.players[i].cards.length === 0){
                         game.deck.dealTo(game.players[i], 2);
                         game.players[i].state = 1;    //player animates their own cards
-                        sendUpdate({index: i, player: getSafePlayer(game.players[i])}, "dealingCards");
+                        game.sendUpdate({index: i, player: getSafePlayer(game.players[i])}, "dealingCards");
                     }
                 }
-                sendUpdate({toStep: 1}, "changeGameStep", {thenUpdate: true});
+                game.sendUpdate({toStep: 1}, "changeGameStep", {thenUpdate: true});
             }
         },
         { //2
@@ -138,8 +138,8 @@ var texasHoldEm = {
                 var dealTo = [];
                 dealTo.push(game.sharedCards);
                 game.deck.dealTo(dealTo, 3);
-                sendUpdate({sharedCards: getSafeCards(game.sharedCards)}, "dealSharedCards");
-                sendUpdate({toStep: 3}, "changeGameStep", {thenUpdate: true});
+                game.sendUpdate({sharedCards: getSafeCards(game.sharedCards)}, "dealSharedCards");
+                game.sendUpdate({toStep: 3}, "changeGameStep", {thenUpdate: true});
             }
         },
         { //4
@@ -164,8 +164,8 @@ var texasHoldEm = {
                 var dealTo = [];
                 dealTo.push(game.sharedCards);
                 game.deck.dealTo(dealTo, 1);
-                sendUpdate({sharedCards:getSafeCards({cards:[game.sharedCards.cards[3]]})}, "dealSharedCards");
-                sendUpdate({toStep: 5}, "changeGameStep", {thenUpdate: true});
+                game.sendUpdate({sharedCards:getSafeCards({cards:[game.sharedCards.cards[3]]})}, "dealSharedCards");
+                game.sendUpdate({toStep: 5}, "changeGameStep", {thenUpdate: true});
             }
         },
         { //6
@@ -192,8 +192,8 @@ var texasHoldEm = {
                 var dealTo = [];
                 dealTo.push(game.sharedCards);
                 game.deck.dealTo(dealTo, 1);
-                sendUpdate({sharedCards:getSafeCards({cards:[game.sharedCards.cards[4]]})}, "dealSharedCards");
-                sendUpdate({toStep: 7}, "changeGameStep", {thenUpdate: true});
+                game.sendUpdate({sharedCards:getSafeCards({cards:[game.sharedCards.cards[4]]})}, "dealSharedCards");
+                game.sendUpdate({toStep: 7}, "changeGameStep", {thenUpdate: true});
             }
         },
         { //8
@@ -281,7 +281,7 @@ var texasHoldEm = {
                     });
                 });
 
-                sendUpdate({hands: highestHand}, "playerWin", {thenUpdate: true});
+                game.sendUpdate({hands: highestHand}, "playerWin", {thenUpdate: true});
 
                 /*var handOrder = Object.keys(highestHand).map(function(val){return parseInt(val)});
                  handOrder.sort(function(a, b){ //sorting in reverse order
@@ -292,7 +292,7 @@ var texasHoldEm = {
 
                  for(var i=0; i<handOrder.length; i++){
                  //start at the highest hand and award money
-                 if(theGame.bettingPots.length === 0){
+                 if(game.bettingPots.length === 0){
                  console.log("Done awarding money!");
                  break;
                  }
@@ -345,7 +345,7 @@ var texasHoldEm = {
                 }
 
                 //cutoffTime = Date.now();
-                //sendUpdate({transferControl: game.dealingOrder[game.dealer].spot, endstatePlayers: playerStates}, "transferControl", {thenUpdate: true});
+                //game.sendUpdate({transferControl: game.dealingOrder[game.dealer].spot, endstatePlayers: playerStates}, "transferControl", {thenUpdate: true});
             }
         }
     ]

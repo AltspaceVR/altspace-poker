@@ -1,23 +1,62 @@
-function errorMessage(configObj){
-    this.timeToDisappear = configObj.timeToDisappear;
-    this.messageType = configObj.messageType || 0;
-    this.message = configObj.message;
+var refreshImg = document.createElement('img');
+refreshImg.src = "assets/refresh.png";
+refreshImg.threeTex = new THREE.Texture(refreshImg);
+var refreshMaterial = new THREE.MeshBasicMaterial({map:refreshImg.threeTex});
+refreshMaterial.transparent = true;
 
-    this.messagePos = configObj.pos;
-    this.messageRot = configObj.rot || new THREE.Quaternion();
-    if (typeof configObj.scale !== 'undefined') {
-        this.scale = new THREE.Vector3(configObj.scale, configObj.scale, configObj.scale);
-    } else {
-        this.scale = new THREE.Vector3(1, 1, 1);
-    }
+var lockImg = document.createElement('img');
+lockImg.src = "assets/lock.png";
+lockImg.threeTex = new THREE.Texture(lockImg);
+var lockMaterial = new THREE.MeshBasicMaterial({map:lockImg.threeTex});
+lockMaterial.transparent = true;
 
-    this.arrowSide = configObj.arrowSide || "down";
+var plusImg = document.createElement('img');
+plusImg.src = "assets/plus.png";
+plusImg.threeTex = new THREE.Texture(plusImg);
 
-    this.moveDirection = new THREE.Vector3(0, 50, 0);
+var minusImg = document.createElement('img');
+minusImg.src = "assets/minus.png";
+minusImg.threeTex = new THREE.Texture(minusImg);
 
-    displayMessage(this);
+var addMaterial = new THREE.MeshBasicMaterial({map:plusImg.threeTex});
+var removeMaterial = new THREE.MeshBasicMaterial({map:minusImg.threeTex});
 
-}
+var betImg = {
+    img: document.createElement('img'),
+    outImg: document.createElement('img')
+};
+betImg.img.src = "assets/betUI-check.png";
+betImg.threeMat = new THREE.MeshBasicMaterial({map:new THREE.Texture(betImg.img)});
+
+var raiseImg = {
+    img: document.createElement('img'),
+    outImg: document.createElement('img')
+};
+raiseImg.img.src = "assets/betUI-raise.png";
+raiseImg.threeMat = new THREE.MeshBasicMaterial({map:new THREE.Texture(raiseImg.img)});
+
+var callImg = {
+    img: document.createElement('img'),
+    outImg: document.createElement('img')
+};
+callImg.img.src = "assets/betUI-call.png";
+callImg.threeMat = new THREE.MeshBasicMaterial({map:new THREE.Texture(callImg.img)});
+
+var foldImg = {
+    img: document.createElement('img'),
+    outImg: document.createElement('img')
+};
+foldImg.outImg.src = "assets/betUI-fold2.png";
+foldImg.img.src = "assets/betUI-fold.png";
+foldImg.threeMat = new THREE.MeshBasicMaterial({map:new THREE.Texture(foldImg.img)});
+
+var inImg = {
+    img: document.createElement('img'),
+    outImg: document.createElement('img')
+};
+inImg.outImg.src = "assets/betUI-all_In.png";
+inImg.img.src = "assets/betUI-all_In.png";
+inImg.threeMat = new THREE.MeshBasicMaterial({map:new THREE.Texture(inImg.img)});
 
 var prevMessageTimeout = null;
 
@@ -41,6 +80,27 @@ function displayMessage(messages) {
         }
         prevMessageTimeout = false;
     }, 100);
+}
+
+function errorMessage(configObj){
+    this.timeToDisappear = configObj.timeToDisappear;
+    this.messageType = configObj.messageType || 0;
+    this.message = configObj.message;
+
+    this.messagePos = configObj.pos;
+    this.messageRot = configObj.rot || new THREE.Quaternion();
+    if (typeof configObj.scale !== 'undefined') {
+        this.scale = new THREE.Vector3(configObj.scale, configObj.scale, configObj.scale);
+    } else {
+        this.scale = new THREE.Vector3(1, 1, 1);
+    }
+
+    this.arrowSide = configObj.arrowSide || "down";
+
+    this.moveDirection = new THREE.Vector3(0, 50, 0);
+
+    displayMessage(this);
+
 }
 
 function displayMessageSingle(message) {
@@ -243,7 +303,7 @@ function rgb2hex(rgb) {
 }
 
 
-function optionsUI(player) {
+function optionsUI(player, theGame) {
     this.mesh = new THREE.Object3D();
     var slideOut = theGame.models.MenuSidepanel.clone();
     var slideOutContainer = new THREE.Object3D();
@@ -305,41 +365,39 @@ function optionsUI(player) {
 
     lockButton.addBehaviors({
         awake: function(obj) {
-            obj.addEventListener('cursordown', function(){
+            obj.addEventListener('cursordown', function() {
                 console.log('clicked!');
                 theGame.locked = !theGame.locked;
                 var pos = new THREE.Vector3();
                 pos.copy(obj.localToWorld(new THREE.Vector3(0, 60, 0)));
                 var quat = obj.getWorldQuaternion();
 
-                if(theGame.locked){
+                if (theGame.locked) {
                     var safePlayers = [];
-                    for(var i=0; i<theGame.players.length; i++){
-                        if(theGame.players[i].state >= 0){
+                    for (var i = 0; i < theGame.players.length; i++) {
+                        if (theGame.players[i].state >= 0) {
                             safePlayers.push(i);
                         }
                     }
-                    var message = "Locked the game!";
-                    var locked = new errorMessage({
+                    errorMessage({
                         timeToDisappear: 2000,
                         messageType: 0,
-                        message: message,
+                        message: "Locked the game!",
                         pos: pos,
                         rot: quat,
                         scale: 0.4
                     });
-                    sendUpdate({playerIndexes: safePlayers}, "lockGame", {thenUpdate: true});
+                    theGame.sendUpdate({playerIndexes: safePlayers}, "lockGame", {thenUpdate: true});
                 } else {
-                    var message = "Unlocked the game!";
-                    var unlocked = new errorMessage({
+                    errorMessage({
                         timeToDisappear: 2000,
                         messageType: 1,
-                        message: message,
+                        message: "Unlocked the game!",
                         pos: pos,
                         rot: quat,
                         scale: 0.4
                     });
-                    sendUpdate({}, "unlockGame", {thenUpdate: true});
+                    theGame.sendUpdate({}, "unlockGame", {thenUpdate: true});
                 }
             });
         }
@@ -347,70 +405,6 @@ function optionsUI(player) {
     lockButton.updateBehaviors(0);
     this.mesh.add(slideOutContainer);
 }
-
-var refreshImg = document.createElement('img');
-refreshImg.src = "assets/refresh.png";
-refreshImg.threeTex = new THREE.Texture(refreshImg);
-var refreshMaterial = new THREE.MeshBasicMaterial({map:refreshImg.threeTex});
-refreshMaterial.transparent = true;
-
-var lockImg = document.createElement('img');
-lockImg.src = "assets/lock.png";
-lockImg.threeTex = new THREE.Texture(lockImg);
-var lockMaterial = new THREE.MeshBasicMaterial({map:lockImg.threeTex});
-lockMaterial.transparent = true;
-
-var plusImg = document.createElement('img');
-plusImg.src = "assets/plus.png";
-plusImg.threeTex = new THREE.Texture(plusImg);
-
-var minusImg = document.createElement('img');
-minusImg.src = "assets/minus.png";
-minusImg.threeTex = new THREE.Texture(minusImg);
-
-var addMaterial = new THREE.MeshBasicMaterial({map:plusImg.threeTex});
-var removeMaterial = new THREE.MeshBasicMaterial({map:minusImg.threeTex});
-
-var betImg = {
-    img: document.createElement('img'),
-    outImg: document.createElement('img')
-};
-betImg.img.src = "assets/betUI-check.png";
-betImg.threeMat = new THREE.MeshBasicMaterial({map:new THREE.Texture(betImg.img)});
-
-var raiseImg = {
-    img: document.createElement('img'),
-    outImg: document.createElement('img')
-};
-raiseImg.img.src = "assets/betUI-raise.png";
-raiseImg.threeMat = new THREE.MeshBasicMaterial({map:new THREE.Texture(raiseImg.img)});
-
-
-var callImg = {
-    img: document.createElement('img'),
-    outImg: document.createElement('img')
-};
-callImg.img.src = "assets/betUI-call.png";
-callImg.threeMat = new THREE.MeshBasicMaterial({map:new THREE.Texture(callImg.img)});
-
-
-
-var foldImg = {
-    img: document.createElement('img'),
-    outImg: document.createElement('img')
-};
-foldImg.outImg.src = "assets/betUI-fold2.png";
-foldImg.img.src = "assets/betUI-fold.png";
-foldImg.threeMat = new THREE.MeshBasicMaterial({map:new THREE.Texture(foldImg.img)});
-
-var inImg = {
-    img: document.createElement('img'),
-    outImg: document.createElement('img')
-};
-inImg.outImg.src = "assets/betUI-all_In.png";
-inImg.img.src = "assets/betUI-all_In.png";
-inImg.threeMat = new THREE.MeshBasicMaterial({map:new THREE.Texture(inImg.img)});
-
 
 function bettingUI(player) {
     this.canvasEl = document.createElement('canvas');
@@ -658,7 +652,7 @@ function advanceUI(chip) {
     card.addBehaviors({awake: function(obj) {
         obj.addEventListener('cursordown', function() {
             Utils.toggleVisible(card, false);
-            sendUpdate({authority:theGame.currentAuthority}, "requestFinishBetting", {thenUpdate: true});
+            theGame.sendUpdate({authority:theGame.currentAuthority}, "requestFinishBetting", {thenUpdate: true});
         });
     }});
     card.updateBehaviors(0);
@@ -869,7 +863,7 @@ function addPlayer(ind) {
                     theGame.players[i].userId = globalUserId;
                     theGame.players[i].name = globalUserName;
                     globalPlayerIndex = i;
-                    sendUpdate({registerIndex: i, userId: globalUserId, name:globalUserName, money: theGame.players[i].money}, "registerPlayer");
+                    theGame.sendUpdate({registerIndex: i, userId: globalUserId, name:globalUserName, money: theGame.players[i].money}, "registerPlayer");
                 } else {
                     altspace.getUser().then(function(result) {
                         globalUserId = result.userId;
@@ -878,7 +872,7 @@ function addPlayer(ind) {
                         theGame.players[i].userId = globalUserId;
                         theGame.players[i].name = globalUserName;
                         globalPlayerIndex = i;
-                        sendUpdate({registerIndex: i, userId: globalUserId, name:globalUserName, money:theGame.players[i].money}, "registerPlayer");
+                        theGame.sendUpdate({registerIndex: i, userId: globalUserId, name:globalUserName, money:theGame.players[i].money}, "registerPlayer");
                     });
                 }
             };
@@ -951,7 +945,7 @@ function startGame(player) {
 
             theGame.step = 0;//do the initialization in the game controller
             theGame.timeBlindStarted = Date.now();
-            //sendUpdate({stepUpdate: 0}, "startGame");
+            //theGame.sendUpdate({stepUpdate: 0}, "startGame");
             theGame.runStep();
         }
     }

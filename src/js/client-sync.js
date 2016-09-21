@@ -622,23 +622,3 @@ function onUpdateRecieved(newVal) {
         console.groupEnd();
     });
 }
-
-function sendUpdate(extraData, title, options) {
-    title = title || "";
-    options = options || {};
-    console.groupCollapsed("Sending update '"+ title + "'");
-    // processUpdates([{title:title, timestamp: Date.now(), data:extraData}])
-    //theGame.syncInstance.update({title:title, data:theGame.roundRecord});
-    if (typeof options.thenUpdate === "undefined" || options.thenUpdate === false) {
-        theGame.roundRecord.push({title: title, timestamp: Date.now(), data: extraData});
-        theGame.syncInstance.update({title: title, data: theGame.roundRecord});
-    } else {
-        //should process this update immediately
-        var time = Date.now();
-        var newArr = theGame.roundRecord.concat([{title: title, timestamp: time, data: extraData}])
-        theGame.syncInstance.update({title: title, data: newArr});
-    }
-
-    console.log(extraData);
-    console.groupEnd();
-}

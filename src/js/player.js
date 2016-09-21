@@ -399,7 +399,7 @@ Player.prototype.betUpdate = function(amount) {
      amount = maxAmount;
      }*/
 
-    sendUpdate({i:theGame.players.indexOf(this), amount: amount}, "playerBet");
+    theGame.sendUpdate({i:theGame.players.indexOf(this), amount: amount}, "playerBet");
 
 
     this.bet(amount);
@@ -437,7 +437,7 @@ Player.prototype.fold = function() {
         theGame.step = 10;
         if (theGame.currentAuthority === globalUserId) {
             setTimeout(function() {
-                sendUpdate({winnerByForfeit: getSafePlayer(potentialPlayers[0])}, "playerWinByForfeit", {thenUpdate: true});
+                theGame.sendUpdate({winnerByForfeit: getSafePlayer(potentialPlayers[0])}, "playerWinByForfeit", {thenUpdate: true});
                 theGame.runStep();
             }, 0);
         }
@@ -451,6 +451,6 @@ Player.prototype.fold = function() {
 };
 
 Player.prototype.foldUpdate = function() {
-    sendUpdate({i:theGame.players.indexOf(this)}, "playerFold");
+    theGame.sendUpdate({i:theGame.players.indexOf(this)}, "playerFold");
     this.fold();
 };
