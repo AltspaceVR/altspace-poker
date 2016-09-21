@@ -2,6 +2,10 @@ function Ruleset(handRanking) {
     this.handRanking = handRanking;
 }
 
+function sortDescending(cards) {
+    return _.sortBy(cards, Card.comparingAceHigh).reverse();
+}
+
 Ruleset.prototype.judge = function(cards) {
     var hand = {
         name: "",
@@ -46,7 +50,7 @@ Ruleset.main = new Ruleset([
                 return false;
             }
 
-            var sortedCards = Card.sort(cards);
+            var sortedCards = sortDescending(cards);
             sortedCards = sortedCards.filter(function(obj) {
                 return obj.number !== multiples[0].number;
             });
@@ -115,7 +119,7 @@ Ruleset.main = new Ruleset([
                 return false;
             }
 
-            var sortedCards = Card.sort(cards);
+            var sortedCards = sortDescending(cards);
             sortedCards = sortedCards.filter(function(obj) {
                 return obj.number !== threeCards[0].number;
             });
@@ -141,7 +145,7 @@ Ruleset.main = new Ruleset([
                 if (secondMultiples.length !== 2) {
                     return false;
                 } else {
-                    var subValCards = Card.sort(cards);
+                    var subValCards = sortDescending(cards);
                     subValCards = subValCards.filter(function(obj){
                         return obj.number !== multiples[0].number && obj.number !== secondMultiples[0].number;
                     });
@@ -165,7 +169,7 @@ Ruleset.main = new Ruleset([
             if (pairCards === false) {
                 return false;
             }
-            var sorted = Card.sort(cards);
+            var sorted = sortDescending(cards);
             //remove the multiples
             sorted = sorted.filter(function(obj) {
                 return obj.number !== pairCards[0].number;
@@ -180,7 +184,7 @@ Ruleset.main = new Ruleset([
     {
         name: "High card",
         isHand: function(cards) {
-            cards = Card.sort(cards);
+            cards = sortDescending(cards);
             return {
                 cards: cards,
                 subVal: cards.map(function(obj){return obj.number;})

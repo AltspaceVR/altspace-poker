@@ -142,17 +142,3 @@ Card.max = function(cards) {
 
 Card.comparingAceLow = function(card) { return card.number == 12 ? -1 : card.number; };
 Card.comparingAceHigh = function(card) { return card.number; };
-
-Card.sort = function(cardset) {
-    var cards = cardset.slice(0);
-    cards.sort(function(card1, card2){
-        if(card1.number === card2.number){
-            return 0;
-        }else{
-            return card1.number > card2.number;
-        }
-    });
-    cards.reverse();
-    //        cards = cards.slice(0, 5);
-    return cards;
-};
