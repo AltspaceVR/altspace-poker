@@ -487,7 +487,7 @@ function processUpdates(newUpdates) {
                             if (k !== 0) {
                                 cardMessage += ", ";
                             }
-                            cardMessage += card.prototype.friendlyRepresentation.apply(winners[i].hands[j].cards[k]);
+                            cardMessage += Card.prototype.friendlyRepresentation.apply(winners[i].hands[j].cards[k]);
                         }
                         if (winners[i].players[j].spot === globalPlayerIndex && didWin === 0) {
                             didWin = 1;

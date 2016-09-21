@@ -97,7 +97,7 @@ function createCardGeom(theCard, doubleSided, visible) {
     }
     if (!theCard.image) {
         theCard.image = document.createElement('img');
-        theCard.image.src = this.filename();
+        theCard.image.src = theCard.filename();
     }
 
     var cardfront = theGame.models.CardFront.clone();
