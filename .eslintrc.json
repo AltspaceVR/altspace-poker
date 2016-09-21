@@ -12,6 +12,7 @@
     "globals": {
         "_": false,
         "altspace": false,
+        "alt": false,
         "THREE": false,
         "TWEEN": false,
         "Promise": false,
