@@ -1,5 +1,5 @@
 function Deck(cards) {
-    this.cards = cards || Card.orderedDeck;
+    this.cards = cards || Card.orderedDeck.slice();
 }
 
 Deck.prototype.shuffle = function() {

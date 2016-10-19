@@ -65,7 +65,7 @@ Player.prototype.renderVisuals = function(timeSince) {
             //this.bettingui.mesh.rotation.y = -Math.PI/8;
             this.bettingui.mesh.rotation.x = -Math.PI/2 + Math.PI/4;
 
-            this.optionsui = new optionsUI(this);
+            this.optionsui = new optionsUI(this, theGame);
 
             this.hand.add(this.optionsui.mesh);
             this.hand.add(this.bettingui.mesh);

@@ -68,8 +68,8 @@ var getSharedCardPosition = function(i) {
 var texasHoldEm = {
     steps: [
         {   //0
+            //this is run on the very first hand only
             exec: function(game) {
-                //this is run on the very first hand only
                 //game.dealer = 0;
                 game.deck.shuffle();
                 game.currentAuthority = globalUserId;
@@ -118,15 +118,15 @@ var texasHoldEm = {
 
                 Utils.toggleVisible(game.betCube, false);
 
-                for (var i = 0; i < game.sharedCards.cards.length; i++) {
-                    var card = game.sharedCards.cards[i] = game.deck.getCard(game.sharedCards.cards[i], true, true);
-                    var toSharedTween = new TWEEN.Tween(game.sharedCards.cards[i].movementTween.position).to(getSharedCardPosition(i), 500);
+                game.sharedCards.cards.forEach(function(card, i) {
+                    card = game.sharedCards.cards[i] = game.deck.getCard(card, true, true);
+                    var toSharedTween = new TWEEN.Tween(card.movementTween.position).to(getSharedCardPosition(i), 500);
                     toSharedTween.onUpdate(function() {
                         //move the cards to the player
                         card.geom.position.copy(card.movementTween.position);
                     });
                     toSharedTween.start();
-                }
+                });
                 game.step = 4;
                 game.runClientStep();
             },
