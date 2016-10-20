@@ -342,7 +342,7 @@ function processUpdates(newUpdates) {
                     theGame.resetCards();
                     document.querySelector("svg .winner").textContent = "Congratulations "+name+"!";
                     document.querySelector("svg .winner").style.display = "block";
-                    document.querySelector("#newGameButton").classList.add("visible");
+                    // document.querySelector("#newGameButton").classList.add("visible");
                 }, 5000);
 
                 break;
