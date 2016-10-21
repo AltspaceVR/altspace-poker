@@ -5,6 +5,10 @@ if (typeof require != "undefined") {
 Card = this.Card = function(number, suit) {
     this.number = number;
     this.suit = suit;
+    this.movementTween = {
+        position: new THREE.Vector3(0, 0, 0),
+        rotation: new THREE.Vector3(0, 0, 0)
+    };
 };
 
 Card.numArray = [2, 3, 4, 5, 6, 7, 8, 9, 10, "jack", "queen", "king", "ace"];

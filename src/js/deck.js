@@ -89,13 +89,7 @@ function createCardGeom(theCard, doubleSided, visible) {
 
     console.log('cloning the card models');
 
-    if (!theCard.movementTween) {
-        theCard.movementTween = {
-            position: new THREE.Vector3(0, 0, 0),
-            rotation: new THREE.Vector3(0, 0, 0)
-        };
-    }
-    if (!theCard.image) {
+    if (visible && !theCard.image) {
         theCard.image = document.createElement('img');
         theCard.image.src = theCard.filename();
     }
