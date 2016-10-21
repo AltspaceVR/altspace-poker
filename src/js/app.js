@@ -11,7 +11,8 @@ var sceneSync;
 altspace.utilities.sync.connect({
     appId: "AltSpacePoker",
     authorId: "Fox",
-    instanceId: null
+    instanceId: null,
+    baseRefUrl: 'https://altspace-internal-apps.firebaseio.com/apps'
 }).then(function(connection) {
     if (location.href.indexOf('altspace-sync-instance') === -1) {
         console.log('waiting for refresh');
