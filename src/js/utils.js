@@ -15,16 +15,16 @@ Utils.arraysEqual = function(a, b) {
 };
 
 Utils.isCyclic = function(obj) {
-    var seenObjects = [];
+    var path = [];
 
-    function detect (obj) {
+    function isCyclic (obj) {
         if (obj && typeof obj === 'object') {
-            if (seenObjects.indexOf(obj) !== -1) {
+            if (path.indexOf(obj) !== -1) {
                 return true;
             }
-            seenObjects.push(obj);
+            path.push(obj);
             for (var key in obj) {
-                if (obj.hasOwnProperty(key) && detect(obj[key])) {
+                if (obj.hasOwnProperty(key) && isCyclic(obj[key])) {
                     console.log(obj, 'cycle at ' + key);
                     return true;
                 }
@@ -33,7 +33,7 @@ Utils.isCyclic = function(obj) {
         return false;
     }
 
-    return detect(obj);
+    return isCyclic(obj);
 };
 
 /**
